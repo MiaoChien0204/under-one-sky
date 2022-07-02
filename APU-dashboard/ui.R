@@ -1,4 +1,5 @@
 navbarPage(
+    id = "navbar",
     title = "APU Dashboard",
     windowTitle = "APU Dashboard", #title for browser tab
     theme = shinytheme("cerulean"), #Theme of the app (blue navbar)
