@@ -6,9 +6,7 @@ docker build -t apu:latest .
 gcloud config set account scplusntu@gmail.com
 
 # set project 
-gcloud config set project scplus2
-
-PROJECTID=$(gcloud config get-value project)
+gcloud config set project scplus2 && PROJECTID=$(gcloud config get-value project)
 
 # ultilize Googld Builds to build image
 docker build . -t gcr.io/$PROJECTID/apu

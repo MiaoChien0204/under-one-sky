@@ -1,19 +1,21 @@
-library(shiny)
-# library(shinyjs)
-library(shinythemes)
-library(shinycssloaders)
-library(magrittr)
-library(dplyr)
-library(leaflet)
-library(rgdal)
-library(shinyWidgets)
-library(sf)
-library(raster)
-library(plotly)
-library(DT)
-library(scales)
-# remotes::install_github("rstudio/leaflet", ref="joe/feature/raster-options")
-# https://github.com/rstudio/leaflet/pull/692
+suppressPackageStartupMessages({
+  library(shiny)
+  # library(shinyjs)
+  library(shinythemes)
+  library(shinycssloaders)
+  library(magrittr)
+  library(dplyr)
+  library(leaflet)
+  library(rgdal)
+  library(shinyWidgets)
+  library(sf)
+  library(raster)
+  library(plotly)
+  library(DT)
+  # remotes::install_github("rstudio/leaflet", ref="joe/feature/raster-options")
+  # https://github.com/rstudio/leaflet/pull/692
+})
+
 
 
 

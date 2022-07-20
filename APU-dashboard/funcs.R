@@ -49,14 +49,17 @@ getStation = function(countryName){
 }
 
 getPM25Layer = function(countryName){
-  readRDS(paste0("data/final/",countryName,"_pm25_tiff.rds"))
+  # readRDS(paste0("data/final/",countryName,"_pm25_tiff.rds"))
+  raster(paste0("data/final/", countryName, "_pm25.tiff"))
 }
 
 getPopLayer = function(countryName){
   # r = raster(../something/india/India_pop_count.tiff)
   
   # saveRDS(r, "data/final/India_pop_count_tiff.rds")
-  readRDS(paste0("data/final/",countryName,"_pop_tiff.rds"))
+  # readRDS(paste0("data/final/",countryName,"_pop_tiff.rds"))
+  raster(paste0("data/final/", countryName, "_pop.tiff"))
+  
 }
 
 addMap_boundary = function(map, countryName){
@@ -103,40 +106,35 @@ addMap_AQ_station = function(map, countryName){
 addMap_pm25 = function(map, countryName){
   pm25 = getPM25Layer(countryName)
   layerName = paste0(countryName, " PM2.5")
-  custom_colors=c("#9CD84E", "#FACF38", "#F65E5F", "#871135")
-  pm25_seq = c(0, 5, 25, 50, 999)
-  pal = colorBin(palette = custom_colors, bins = pm25_seq, domain = pm25_seq, na.color="transparent")
+  
+  brks = c(0, 5, 25, 50, 999)
+  pal = colorBin(palette = c("#9CD84E", "#FACF38", "#F65E5F", "#7D3C98"), bins = brks, domain = brks, na.color="transparent")
   
   map %>%
-  # leaflet() %>% 
-    addRasterImage(pm25, colors = pal, opacity = 0.6, group = layerName
-                   , options = tileOptions(pane = "theme_pm25")
+  # main_map %>% 
+    addRasterImage(pm25, colors = pal, opacity = 0.2, group = layerName# , options = tileOptions(pane = "theme_pm25")
                    ) %>% 
-    addLegend(pal=pal, values = pm25_seq, title = "PM2.5 concentration", position="bottomleft")
-  
+    addLegend(pal=pal, values = brks, title = "PM2.5 concentration", position="bottomleft")
 }
 
 addMap_pop = function(map, countryName){
   pop = getPopLayer(countryName)
-  
   layerName = paste0(countryName, " Population")
   
   if(countryName=="India"){
     #pop$India_pop_count %>% values %>% na.omit() %>% .[which(.>0)] %>% summary()
     brks = c(0, 1, 100, 200, 300, 400, 500, 7010)  
   }else if(countryName=="Tailand"){
-    # brks = NA
+    brks = c(0, 1, 100, 200, 300, 400, 500, 7010)  
   }
   
   pal <- colorBin(c("#FFFFFF", "black"), bins = brks, domain=brks, na.color = "transparent")
   
   map %>% 
   # main_map %>% 
-    addRasterImage(pop, colors = pal, opacity = 0.6, 
-                   group = layerName
-                   # , options = tileOptions(pane = "pop")
+    addRasterImage(pop, colors = pal, opacity = 0.9, group = layerName# , options = tileOptions(pane = "pop")
                    ) %>% 
-    addLegend(pal=pal, values = brks, title = "Population", position="bottomleft")
+    addLegend(pal=pal, values = brks, title = "Population", position="bottomright")
 }
 
 clearMap_theme = function(map, countryName){

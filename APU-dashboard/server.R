@@ -27,6 +27,7 @@ shinyServer(function(input, output) {
         message("#------------#")
     })
 
+    ##### MAP ######
     observeEvent(countryName(), {
         countryName = countryName()
         if(countryName=="India"){
@@ -68,49 +69,49 @@ shinyServer(function(input, output) {
         
     })
     
-    
     ##### Rank 20 ######
     observeEvent({
-        themeName()
-        popName()
-        brk()
-        number()
-        1
+      themeName()
+      popName()
+      brk()
+      number()
+      1
     }, {
-        popName = popName()
-        # popName = "pregs"
-        brk = brk()
-        # brk = "25km"
-        number = number()
-        # number = "number of people"
-        
-        
-        rankData = getRankData(countryName = countryName(), themeName=themeName(), popName = popName, brk=brk)
-        # print(rankData)
-        
-        output$rank20_chart <- renderPlotly({
-            drawRankChart(rankData = rankData, number = number)
-        })
-        
-        output$rank20_table <- DT::renderDataTable({
-            rankData %>% arrange(desc(main_count)) %>% 
-                transmute(name, 
-                          `number of people` = main_count, 
-                          `% of all people` = main_all_perc, 
-                          `% of this population` = main_group_perc
-                          #, ID_2
-                          )
-        }, 
-        server = FALSE, 
-        extensions = c("Scroller", "Select"), 
-        option = list(
-            select = list(style = 'os', items = 'row'),
-            deferRender = TRUE, scrollY = 250, scroller = TRUE
-            ),
-        selection = 'none'
-        )
-        
+      popName = popName()
+      # popName = "pregs"
+      brk = brk()
+      # brk = "25km"
+      number = number()
+      # number = "number of people"
+      
+      
+      rankData = getRankData(countryName = countryName(), themeName=themeName(), popName = popName, brk=brk)
+      # print(rankData)
+      
+      output$rank20_chart <- renderPlotly({
+        drawRankChart(rankData = rankData, number = number)
+      })
+      
+      output$rank20_table <- DT::renderDataTable({
+        rankData %>% arrange(desc(main_count)) %>% 
+          transmute(name, 
+                    `number of people` = main_count, 
+                    `% of all people` = main_all_perc, 
+                    `% of this population` = main_group_perc
+                    #, ID_2
+          )
+      }, 
+      server = FALSE, 
+      extensions = c("Scroller", "Select"), 
+      option = list(
+        select = list(style = 'os', items = 'row'),
+        deferRender = TRUE, scrollY = 250, scroller = TRUE
+      ),
+      selection = 'none'
+      )
+      
     })
+    
 
     
 })

@@ -33,8 +33,10 @@ navbarPage(
                                               radioGroupButtons(
                                                   inputId = "theme_selector",
                                                   label = "select theme:",
-                                                  choices = c("AQM station"="AQ Station",
-                                                              "PM2.5 pollution"="PM2.5"),
+                                                  choices = c(
+                                                      "PM2.5 pollution"="PM2.5",       
+                                                      "AQM station"="AQ Station"
+                                                             ),
                                                   justified = TRUE
                                               ),
                                               pickerInput(
@@ -90,28 +92,29 @@ navbarPage(
                                )
 
                       )
-        ),
-        tabPanel(
-            title = "Malaysia"
-        ),
-        tabPanel(
-            title = "Tailand"
-        ),
-        tabPanel(
-            title = "Philippines"
-        ),
-        tabPanel(
-            title = "Indonesia"
-        ),
-        tabPanel(
-            title = "Turkey"
-        ),
-        tabPanel(
-            title = "South Africa"
-        ),
-        tabPanel(
-            title = "Colombia"
         )
+        # ,
+        # tabPanel(
+        #     title = "Malaysia"
+        # ),
+        # tabPanel(
+        #     title = "Tailand"
+        # ),
+        # tabPanel(
+        #     title = "Philippines"
+        # ),
+        # tabPanel(
+        #     title = "Indonesia"
+        # ),
+        # tabPanel(
+        #     title = "Turkey"
+        # ),
+        # tabPanel(
+        #     title = "South Africa"
+        # ),
+        # tabPanel(
+        #     title = "Colombia"
+        # )
     
     
     

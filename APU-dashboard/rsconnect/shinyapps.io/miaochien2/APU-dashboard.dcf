@@ -4,11 +4,10 @@ username:
 account: miaochien2
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 6640436
-bundleId: 6097245
+appId: 6667929
+bundleId: 6115227
 url: https://miaochien2.shinyapps.io/APU-dashboard/
-when: 1657782362.56019
-lastSyncTime: 1657782362.56021
+when: 1658316041.74558
+lastSyncTime: 1658316041.74559
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: AllData|getData|OldWebsite|test
