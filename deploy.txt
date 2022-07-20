@@ -13,7 +13,7 @@ PROJECTID=$(gcloud config get-value project)
 docker build . -t gcr.io/$PROJECTID/apu
 
 # test locally
-# docker run --rm -p 8080:80 --name apu gcr.io/$PROJECTID/apu
+# docker run --rm -p 9999:80 --name apu gcr.io/$PROJECTID/apu
 
 docker push gcr.io/$PROJECTID/apu
 

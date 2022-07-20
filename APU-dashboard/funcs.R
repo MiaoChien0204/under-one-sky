@@ -60,7 +60,8 @@ getPop = function(countryName){
   # r = raster("../something/india/India_pop_count.tiff")
   
   # saveRDS(r, "data/final/India_pop_count_tiff.rds")
-  readRDS(paste0("data/final/",countryName,"_pop_count_tiff.rds"))
+  # readRDS(paste0("data/final/",countryName,"_pop_count_tiff.rds"))
+  raster("data/final/India_pop_count.tiff")
 }
 
 addMap_boundary = function(map, countryName){
@@ -138,7 +139,8 @@ addMap_pop = function(map, countryName){
   # leaflet() %>% addTiles() %>% 
     addRasterImage(pop, colors = pal, opacity = 0.2, 
                    group = layerName
-                   , options = tileOptions(pane = "pop")) %>% 
+                   # , options = tileOptions(pane = "pop")
+                   ) %>% 
     addLegend(pal=pal, values = brks, title = "Population", position="bottomleft")
 }
 
