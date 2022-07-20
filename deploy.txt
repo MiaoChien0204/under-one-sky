@@ -14,6 +14,7 @@ docker build . -t gcr.io/$PROJECTID/apu
 
 # test locally
 # docker run --rm -p 9999:80 --name apu gcr.io/$PROJECTID/apu
+# see http://localhost:9999/APU-dashboard/
 
 docker push gcr.io/$PROJECTID/apu
 

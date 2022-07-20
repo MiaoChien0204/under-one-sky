@@ -3,7 +3,7 @@ getStationData = function(countryName){
   # aq %<>% transmute(name = NAME_2, ID_2,
   #                   station_all=all,
   #                   station_all_all=all, station_all_5km = all_5km, station_all_10km = all_10km, station_all_25km=all_25km,
-  #                   station_pregs_all = pregs_all, station_pregs_5km=pregs_5km, station_pregs_10km=pregs_10km, station_pregs_25km=pregs_25km,
+  #                   station_pregs_all = pregs_all, station_pregs_5km=pregs_5km, station_pregs_10km=pregs_10km, station_pregs_25km=pregs_25km, # nolint
   #                   station_child_all=child_all, station_child_5km=child_5km, station_child_10km=child_10km, station_child_25km=child_25km,
   #                   station_old_all=old_all, station_old_5km=old_5km, station_old_10km=old_10km, station_old_25km=old_25km)
   
@@ -109,7 +109,7 @@ addMap_pm25 = function(map, countryName){
   
   map %>%
   # leaflet() %>% 
-    addRasterImage(pm25, colors = pal, opacity = 0.5, group = layerName
+    addRasterImage(pm25, colors = pal, opacity = 0.7, group = layerName
                    , options = tileOptions(pane = "theme_pm25")
                    ) %>% 
     addLegend(pal=pal, values = pm25_seq, title = "PM2.5 concentration", position="bottomleft")
@@ -131,7 +131,7 @@ addMap_pop = function(map, countryName){
   pal <- colorBin(c("#FFFFFF", "black"), bins = brks, domain=brks, na.color = "transparent")
   
   map %>% 
-  # leaflet() %>% addTiles() %>% 
+  # main_map %>% 
     addRasterImage(pop, colors = pal, opacity = 0.6, 
                    group = layerName
                    , options = tileOptions(pane = "pop")
