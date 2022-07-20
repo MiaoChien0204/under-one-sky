@@ -1,5 +1,6 @@
 # build image
 docker build -t apu:latest .
+# docker build -t apu:latest . --no-cache
 
 # switch account to scplusntu@gmail.com
 gcloud config set account scplusntu@gmail.com
@@ -11,8 +12,10 @@ PROJECTID=$(gcloud config get-value project)
 
 # ultilize Googld Builds to build image
 docker build . -t gcr.io/$PROJECTID/apu
+# docker build . --no-cache -t gcr.io/$PROJECTID/apu
 
 # test locally
+# docker run --rm -p 9999:80 --name apu apu:latest
 # docker run --rm -p 9999:80 --name apu gcr.io/$PROJECTID/apu
 # see http://localhost:9999/APU-dashboard/
 

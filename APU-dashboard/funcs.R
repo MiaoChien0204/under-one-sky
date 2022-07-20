@@ -13,11 +13,11 @@ getStationData = function(countryName){
 }
 
 getPM25Data = function(countryName){
-  # pm25 = read.csv(paste0("data/", countryName, "_pm25.csv")) %>% as_tibble() %>% dplyr::select(-FID, -ID_0, -COUNTRY, -NAME_1, -NL_NAME_1, -NAME_2)
+  # pm25 = read.csv("../something/OldWebsite/data/final/pm25.csv")%>% as_tibble() %>% dplyr::select(-FID, -ID_0, -COUNTRY, -NAME_1, -NL_NAME_1, -NAME_2)
   # colnames(pm25) %<>% gsub("^X", "",.)
   # colnames(pm25) <- c(colnames(pm25)[1], paste0("pm25_", colnames(pm25[2:length(pm25)])))
-  # saveRDS(pm25, paste0("data/final/", countryName, "_pm25.rds"))
-  readRDS(paste0("data/final/", countryName, "_pm25.rds"))
+  # saveRDS(pm25, paste0("data/final/", countryName, "_pm25_data.rds"))
+  readRDS(paste0("data/final/", countryName, "_pm25_data.rds"))
 }
 
 getBoundary = function(countryName){
@@ -48,15 +48,15 @@ getStation = function(countryName){
   readRDS(paste0("data/final/",countryName,"_station.rds"))
 }
 
-getPM25 = function(countryName){
-  readRDS(paste0("data/final/",countryName,"_pm25.rds"))
+getPM25Layer = function(countryName){
+  readRDS(paste0("data/final/",countryName,"_pm25_tiff.rds"))
 }
 
-getPop = function(countryName){
+getPopLayer = function(countryName){
   # r = raster(../something/india/India_pop_count.tiff)
   
   # saveRDS(r, "data/final/India_pop_count_tiff.rds")
-  readRDS(paste0("data/final/",countryName,"_pop_count_tiff.rds"))
+  readRDS(paste0("data/final/",countryName,"_pop_tiff.rds"))
 }
 
 addMap_boundary = function(map, countryName){
@@ -101,7 +101,7 @@ addMap_AQ_station = function(map, countryName){
 }
 
 addMap_pm25 = function(map, countryName){
-  pm25 = getPM25(countryName)
+  pm25 = getPM25Layer(countryName)
   layerName = paste0(countryName, " PM2.5")
   custom_colors=c("#9CD84E", "#FACF38", "#F65E5F", "#871135")
   pm25_seq = c(0, 5, 25, 50, 999)
@@ -109,7 +109,7 @@ addMap_pm25 = function(map, countryName){
   
   map %>%
   # leaflet() %>% 
-    addRasterImage(pm25, colors = pal, opacity = 0.7, group = layerName
+    addRasterImage(pm25, colors = pal, opacity = 0.6, group = layerName
                    , options = tileOptions(pane = "theme_pm25")
                    ) %>% 
     addLegend(pal=pal, values = pm25_seq, title = "PM2.5 concentration", position="bottomleft")
@@ -117,7 +117,7 @@ addMap_pm25 = function(map, countryName){
 }
 
 addMap_pop = function(map, countryName){
-  pop = getPop(countryName)
+  pop = getPopLayer(countryName)
   
   layerName = paste0(countryName, " Population")
   
@@ -134,7 +134,7 @@ addMap_pop = function(map, countryName){
   # main_map %>% 
     addRasterImage(pop, colors = pal, opacity = 0.6, 
                    group = layerName
-                   , options = tileOptions(pane = "pop")
+                   # , options = tileOptions(pane = "pop")
                    ) %>% 
     addLegend(pal=pal, values = brks, title = "Population", position="bottomleft")
 }

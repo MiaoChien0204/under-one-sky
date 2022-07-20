@@ -1,3 +1,6 @@
+library(shiny)
+source("funcs.R")
+
 navbarPage(
     id = "navbar",
     title = "APU Dashboard",
