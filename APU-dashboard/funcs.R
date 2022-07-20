@@ -21,7 +21,7 @@ getPM25Data = function(countryName){
 }
 
 getBoundary = function(countryName){
-  # boundary = readOGR(paste0("data/",countryName,"_border.geojson")) %>% st_as_sf()
+  # boundary = readOGR(paste0("../something/india/India_border.geojson")) %>% st_as_sf()
   # border_sp = readRDS(paste0("data/final/",countryName,"_border.rds")) %>% st_as_sf() %>% 
   #   dplyr::select(-ID_0, -COUNTRY, -NAME_1, -NL_NAME_1, -VARNAME_2, -NL_NAME_2, -TYPE_2, -ENGTYPE_2, -CC_2, -HASC_2)
   
@@ -57,24 +57,17 @@ getPM25 = function(countryName){
 }
 
 getPop = function(countryName){
-  # r = raster(paste0("data/", countryName, "_pop_count.tiff"))
-  # saveRDS(r, "data/india_pop_count_tiff.rds")
+  # r = raster("../something/india/India_pop_count.tiff")
+  
+  # saveRDS(r, "data/final/India_pop_count_tiff.rds")
   readRDS(paste0("data/final/",countryName,"_pop_count_tiff.rds"))
 }
 
-
-
-addMap_boundary = function(map, countryName, theme){
+addMap_boundary = function(map, countryName){
   boundary = getBoundary(countryName)
   layerName = paste0(countryName, " Boundary")
   
-  if(theme=="AQ Station"){
-    # All Population
-    labels <- paste0("<h4 style='text-align: center;'>",boundary$NAME_2,"</h4>") %>% lapply(htmltools::HTML)
-  }else if(theme=="PM2.5"){
-    # All Population
-    labels <- paste0("<h4 style='text-align: center;'>",boundary$NAME_2,"</h4>") %>% lapply(htmltools::HTML)
-  }
+  labels <- paste0("<h4 style='text-align: center;'>",boundary$NAME_2,"</h4>") %>% lapply(htmltools::HTML)
   
   map %>%
   addPolygons(
@@ -129,6 +122,7 @@ addMap_pm25 = function(map, countryName){
 
 addMap_pop = function(map, countryName){
   pop = getPop(countryName)
+  
   layerName = paste0(countryName, " Population")
   
   if(countryName=="India"){
@@ -144,8 +138,7 @@ addMap_pop = function(map, countryName){
   # leaflet() %>% addTiles() %>% 
     addRasterImage(pop, colors = pal, opacity = 0.2, 
                    group = layerName
-                   , options = tileOptions(pane = "pop")
-                   ) %>% 
+                   , options = tileOptions(pane = "pop")) %>% 
     addLegend(pal=pal, values = brks, title = "Population", position="bottomleft")
 }
 
@@ -155,7 +148,6 @@ clearMap_theme = function(map, countryName){
   map %>% 
     clearGroup(theme_layer_names)
 }
-
 
 addMap_theme = function(map, themeName, countryName){
   if(themeName=="AQ Station"){
@@ -187,11 +179,11 @@ getRankData = function(countryName, themeName, popName, brk){
     main_count = paste0(fieldName, "_", popName, "_",brk)
     main_group_all = paste0(fieldName, "_", popName, "_all")
   }else if(themeName =="PM2.5"){
-    
+    message("not yet")
   }
   
   
-    d %>% rename(all_field=!!all_field, main_count=!!main_count, main_group_all = !!main_group_all) %>% 
+    d %>% rename(all_field=!!all_field, main_count=!!main_count, main_group_all = !!main_group_all) %>%  # nolint
       dplyr::select(name, ID_2, all_field, main_count, main_group_all ) %>% 
     transmute(name, ID_2, main_count = round(main_count, 2), main_all_perc = round((main_count/all_field)*100, 2), main_group_perc = round((main_count/main_group_all)*100, 2))
   
@@ -206,8 +198,6 @@ drawRankChart = function(rankData, number = c("main_count", "main_all_perc", "ma
     dplyr::select(name, number) %>% 
     arrange(desc(number)) %>% head(20)
   
-  # print(data)
-  
   if(number=="main_count"){
     unit = "number of people"
   }else{
@@ -215,10 +205,10 @@ drawRankChart = function(rankData, number = c("main_count", "main_all_perc", "ma
   }
   
   plot_ly(data) %>% 
-    plotly::add_bars(y = ~name, x=~number) %>% 
-    layout(yaxis = list(title = "city name", categoryorder = "array", categoryarray = rev(data$name)),
-           xaxis = list(title = unit)
-           )
+  plotly::add_bars(y = ~name, x=~number) %>% 
+  layout(yaxis = list(title = "city name", categoryorder = "array", categoryarray = rev(data$name)),
+        xaxis = list(title = unit)
+        )
  
 }
 

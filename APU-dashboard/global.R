@@ -1,5 +1,5 @@
 library(shiny)
-library(shinyjs)
+# library(shinyjs)
 library(shinythemes)
 library(shinycssloaders)
 library(magrittr)
@@ -15,7 +15,6 @@ library(scales)
 # remotes::install_github("rstudio/leaflet", ref="joe/feature/raster-options")
 # https://github.com/rstudio/leaflet/pull/692
 
-# remotes::install_github("igraph/rigraph@master")
 
 
 cssFile = list.files("www")[grep(".css", list.files("www"))]

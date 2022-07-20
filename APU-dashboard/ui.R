@@ -78,10 +78,6 @@ navbarPage(
                                                             
                                                         )
                                                         
-                                                         
-                                                        
-                                                        
-                                                        
                                                         ),
                                                tabPanel("Plots"),
                                                tabPanel("Table")
@@ -114,52 +110,6 @@ navbarPage(
         tabPanel(
             title = "Colombia"
         )
-        
-        # "MAP", icon = icon("map"),
-        
-        # tabPanel(
-        #     title = "India",
-        # 
-        #     fluidPage(class="main-page",
-        #                 column(width = 5, class="left-control-panel col-md-5 col-sm-12", 
-        #                        ##### MAP CONTENT #####
-        #                        div(class="theMap",
-        #                            leafletOutput("main_map")
-        #                            )
-        #                        ),
-        #                 column(width = 7, class="right-control-panel col-md-7 col-sm-12", 
-        #                        ##### CHARTS CONTENT #####
-        #                        fluidRow(
-        #                            column(width=6,
-        #                                   h2("Different Air Under one Sky: "),
-        #                                   h3("The Inequality Air Research")
-        #                                   ),
-        #                            column(width=6,
-        #                                   wellPanel(
-        #                                       radioGroupButtons(
-        #                                           inputId = "theme_selector",
-        #                                           label = "select theme:",
-        #                                           choices = c("Air quality monitoring station"="AQ Station", 
-        #                                                       "PM2.5 pollution"="PM2.5"),
-        #                                           justified = TRUE
-        #                                       ),
-        #                                       pickerInput(
-        #                                           inputId = "pop_selector",
-        #                                           label = "select population ", 
-        #                                           choices = c("All Population", "Infant (0-4)", "Elderlies (65+)", "Pregnant Woman")
-        #                                       )
-        #                                       
-        #                                   )
-        #                                   )
-        #                        )
-        #                        
-        #                        )
-        #               
-        #               )
-        #     
-        # ),
-        
-    #)
     
     
     

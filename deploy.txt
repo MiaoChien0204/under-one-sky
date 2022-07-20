@@ -1,0 +1,22 @@
+# build image
+docker build -t apu:latest .
+
+# switch account to scplusntu@gmail.com
+gcloud config set account scplusntu@gmail.com
+
+# set project 
+gcloud config set project scplus2
+
+PROJECTID=$(gcloud config get-value project)
+
+# ultilize Googld Builds to build image
+docker build . -t gcr.io/$PROJECTID/apu
+
+# test locally
+# docker run --rm -p 8080:80 --name apu gcr.io/$PROJECTID/apu
+
+docker push gcr.io/$PROJECTID/apu
+
+# deploy on gcp cloud run
+gcloud run deploy --image gcr.io/$PROJECTID/apu --port=80 --platform managed --region asia-east1
+

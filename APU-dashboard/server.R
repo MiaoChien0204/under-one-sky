@@ -61,7 +61,7 @@ shinyServer(function(input, output) {
 
         leafletProxy("main_map") %>%
             ## main_map %>%
-            addMap_boundary(countryName = countryName, theme = themeName) %>%
+            addMap_boundary(countryName = countryName) %>%
             addMap_theme(themeName=themeName, countryName = countryName) %>%
             addMap_pop(countryName=countryName) %>%
             addLayersControl(
