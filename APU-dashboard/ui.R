@@ -49,7 +49,7 @@ navbarPage(
                                ), 
                                fluidRow(
                                    tabsetPanel(type = "tabs",
-                                               tabPanel("Rank 20",
+                                               tabPanel("Rank 20 Cities",
                                                         
                                                         div(class="rank20_selector", style="display:inline",
                                                             wellPanel(
@@ -79,8 +79,7 @@ navbarPage(
                                                         )
                                                         
                                                         ),
-                                               tabPanel("Plots"),
-                                               tabPanel("Table")
+                                               tabPanel("City Situation")
                                    )
                                    
                                )

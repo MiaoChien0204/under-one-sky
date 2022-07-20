@@ -45,7 +45,9 @@ shinyServer(function(input, output) {
             addMapPane("pop", zIndex=420) %>% #中間
             addMapPane("theme_pm25", zIndex=410) %>% #最下
             addMapPane("theme_AQstation", zIndex = 430) %>% # 最上
-            setView(lng=view$lng, lat=view$lat, zoom=view$zoom)
+            setView(lng=view$lng, lat=view$lat, zoom=view$zoom) %>% 
+            addMap_boundary(countryName = countryName) %>%
+            addMap_pop(countryName=countryName)
     })
 
     observeEvent(themeName(), {
@@ -61,9 +63,7 @@ shinyServer(function(input, output) {
 
         leafletProxy("main_map") %>%
             ## main_map %>%
-            addMap_boundary(countryName = countryName) %>%
             addMap_theme(themeName=themeName, countryName = countryName) %>%
-            addMap_pop(countryName=countryName) %>%
             addLayersControl(
                 baseGroups = c("Toner", "Carto", "World Physical"),
                 overlayGroups = c(country_boundary_layer_name, country_pop_layer_name, country_theme_layer_name),

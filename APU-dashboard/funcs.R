@@ -49,19 +49,14 @@ getStation = function(countryName){
 }
 
 getPM25 = function(countryName){
-  # r = raster(paste0("data/",countryName,"_pm25.tiff"))
-  # crs(r) <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" 
-  # saveRDS(r, "data/india_pm25_tiff.rds")
-  
-  readRDS(paste0("data/final/",countryName,"_pm25_tiff.rds"))
+  readRDS(paste0("data/final/",countryName,"_pm25.rds"))
 }
 
 getPop = function(countryName){
-  # r = raster("../something/india/India_pop_count.tiff")
+  # r = raster(../something/india/India_pop_count.tiff)
   
   # saveRDS(r, "data/final/India_pop_count_tiff.rds")
-  # readRDS(paste0("data/final/",countryName,"_pop_count_tiff.rds"))
-  raster("data/final/India_pop_count.tiff")
+  readRDS(paste0("data/final/",countryName,"_pop_count_tiff.rds"))
 }
 
 addMap_boundary = function(map, countryName){
@@ -108,7 +103,7 @@ addMap_AQ_station = function(map, countryName){
 addMap_pm25 = function(map, countryName){
   pm25 = getPM25(countryName)
   layerName = paste0(countryName, " PM2.5")
-  custom_colors=c("#9CD84E", "#FACF38", "#F65E5F", "#A070B6")
+  custom_colors=c("#9CD84E", "#FACF38", "#F65E5F", "#871135")
   pm25_seq = c(0, 5, 25, 50, 999)
   pal = colorBin(palette = custom_colors, bins = pm25_seq, domain = pm25_seq, na.color="transparent")
   
@@ -128,7 +123,7 @@ addMap_pop = function(map, countryName){
   
   if(countryName=="India"){
     #pop$India_pop_count %>% values %>% na.omit() %>% .[which(.>0)] %>% summary()
-    brks = c(0, 1, 100, 200, 400, 53004)  
+    brks = c(0, 1, 100, 200, 300, 400, 500, 7010)  
   }else if(countryName=="Tailand"){
     # brks = NA
   }
@@ -137,9 +132,9 @@ addMap_pop = function(map, countryName){
   
   map %>% 
   # leaflet() %>% addTiles() %>% 
-    addRasterImage(pop, colors = pal, opacity = 0.2, 
+    addRasterImage(pop, colors = pal, opacity = 0.6, 
                    group = layerName
-                   # , options = tileOptions(pane = "pop")
+                   , options = tileOptions(pane = "pop")
                    ) %>% 
     addLegend(pal=pal, values = brks, title = "Population", position="bottomleft")
 }
@@ -174,15 +169,15 @@ addMap_theme = function(map, themeName, countryName){
 # brk = "5km"
 
 getRankData = function(countryName, themeName, popName, brk){
-  if(themeName=="AQ Station"){
+  # if(themeName=="AQ Station"){
     d = getStationData(countryName)
     fieldName = "station"
     all_field = "station_all"
     main_count = paste0(fieldName, "_", popName, "_",brk)
     main_group_all = paste0(fieldName, "_", popName, "_all")
-  }else if(themeName =="PM2.5"){
-    message("not yet")
-  }
+  # }else if(themeName =="PM2.5"){
+  #   message("not yet")
+  # }
   
   
     d %>% rename(all_field=!!all_field, main_count=!!main_count, main_group_all = !!main_group_all) %>%  # nolint
