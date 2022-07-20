@@ -12,31 +12,154 @@ navbarPage(
         #includeScript("google-analytics.js"),
         HTML("<base target='_blank'>")
     ),
-    navbarMenu(
-        "MAP", icon = icon("map"),
+    
         tabPanel(
             title = "India",
-            ##### MAP CONTENT #####
             fluidPage(class="main-page",
-                        column(width = 4, class="left-control-panel col-md-4 col-sm-12", 
+                        column(width = 7, class="left-control-panel col-md-7 col-sm-12",
+                               ##### MAP CONTENT #####
                                div(class="theMap",
-                                   leafletOutput("main_map")
+                                   withSpinner(leafletOutput("main_map"), type=4, size=1.5)
                                    )
                                ),
-                        column(width = 8, class="right-control-panel col-md-8 col-sm-12", 
-                               "圖表區"
+                        column(width = 5, class="right-control-panel col-md-5 col-sm-12",
+                               ##### CHARTS CONTENT #####
+                               fluidRow(
+                                   column(width=6,
+                                          wellPanel(
+                                              radioGroupButtons(
+                                                  inputId = "theme_selector",
+                                                  label = "select theme:",
+                                                  choices = c("AQM station"="AQ Station",
+                                                              "PM2.5 pollution"="PM2.5"),
+                                                  justified = TRUE
+                                              ),
+                                              pickerInput(
+                                                  inputId = "pop_selector",
+                                                  label = "select population ",
+                                                  choices = c("All Population"="all", 
+                                                              "Infant (0-4)" ="child", 
+                                                              "Elderlies (65+)" = "old", 
+                                                              "Pregnant Woman" = "pregs"
+                                                              )
+                                              )
+
+                                          )
+                                          )
+                               ), 
+                               fluidRow(
+                                   tabsetPanel(type = "tabs",
+                                               tabPanel("Rank 20",
+                                                        
+                                                        div(class="rank20_selector", style="display:inline",
+                                                            wellPanel(
+                                                                pickerInput(
+                                                                    inputId = "brk_selector",
+                                                                    label = "select break point",
+                                                                    choices = c("5 km"="5km", 
+                                                                                "10 km" ="10km", 
+                                                                                "25 km" = "25km"
+                                                                    )
+                                                                ),
+                                                                pickerInput(
+                                                                    inputId = "number_selector",
+                                                                    label = "select display number",
+                                                                    choices = c("number of people"="main_count", 
+                                                                                "% of all people" ="main_all_perc", 
+                                                                                "% of this population" = "main_group_perc"
+                                                                    )
+                                                                )    
+                                                            )
+                                                        ),
+                                                        
+                                                        navlistPanel(widths = c(2, 10),
+                                                            tabPanel("Plot", plotlyOutput("rank20_chart")),
+                                                            tabPanel("Table", DT::dataTableOutput("rank20_table"))
+                                                            
+                                                        )
+                                                        
+                                                         
+                                                        
+                                                        
+                                                        
+                                                        ),
+                                               tabPanel("Plots"),
+                                               tabPanel("Table")
+                                   )
+                                   
                                )
-                      
+
+                               )
+
                       )
-            
         ),
         tabPanel(
             title = "Malaysia"
+        ),
+        tabPanel(
+            title = "Tailand"
+        ),
+        tabPanel(
+            title = "Philippines"
+        ),
+        tabPanel(
+            title = "Indonesia"
+        ),
+        tabPanel(
+            title = "Turkey"
+        ),
+        tabPanel(
+            title = "South Africa"
+        ),
+        tabPanel(
+            title = "Colombia"
         )
-    ),
-    navbarMenu(
-        "DATASET"
-    )
+        
+        # "MAP", icon = icon("map"),
+        
+        # tabPanel(
+        #     title = "India",
+        # 
+        #     fluidPage(class="main-page",
+        #                 column(width = 5, class="left-control-panel col-md-5 col-sm-12", 
+        #                        ##### MAP CONTENT #####
+        #                        div(class="theMap",
+        #                            leafletOutput("main_map")
+        #                            )
+        #                        ),
+        #                 column(width = 7, class="right-control-panel col-md-7 col-sm-12", 
+        #                        ##### CHARTS CONTENT #####
+        #                        fluidRow(
+        #                            column(width=6,
+        #                                   h2("Different Air Under one Sky: "),
+        #                                   h3("The Inequality Air Research")
+        #                                   ),
+        #                            column(width=6,
+        #                                   wellPanel(
+        #                                       radioGroupButtons(
+        #                                           inputId = "theme_selector",
+        #                                           label = "select theme:",
+        #                                           choices = c("Air quality monitoring station"="AQ Station", 
+        #                                                       "PM2.5 pollution"="PM2.5"),
+        #                                           justified = TRUE
+        #                                       ),
+        #                                       pickerInput(
+        #                                           inputId = "pop_selector",
+        #                                           label = "select population ", 
+        #                                           choices = c("All Population", "Infant (0-4)", "Elderlies (65+)", "Pregnant Woman")
+        #                                       )
+        #                                       
+        #                                   )
+        #                                   )
+        #                        )
+        #                        
+        #                        )
+        #               
+        #               )
+        #     
+        # ),
+        
+    #)
     
     
     

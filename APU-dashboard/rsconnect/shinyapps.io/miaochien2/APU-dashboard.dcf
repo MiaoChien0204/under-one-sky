@@ -1,0 +1,14 @@
+name: APU-dashboard
+title: APU-dashboard
+username:
+account: miaochien2
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6640436
+bundleId: 6097245
+url: https://miaochien2.shinyapps.io/APU-dashboard/
+when: 1657782362.56019
+lastSyncTime: 1657782362.56021
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: AllData|getData|OldWebsite|test
