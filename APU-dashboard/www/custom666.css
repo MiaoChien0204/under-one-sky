@@ -40,3 +40,24 @@ body{
 .rank20_selector .shiny-input-container {
     display: inline-block;
 }
+
+.tab-content{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.leaflet-tooltip{
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.leaflet-tooltip-left:before, .leaflet-tooltip-right:before{
+	display: none !important;
+	}
+
+
+.shiny-output-error{
+  display: none;
+}
+

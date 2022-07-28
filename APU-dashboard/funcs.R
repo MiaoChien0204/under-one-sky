@@ -1,7 +1,12 @@
 getStationData = function(countryName){
-  # aq = readOGR("data/AQ_station_5_10_25_pop/AQ_station_5_10_25_pop.shp") %>% st_as_sf()
+  # aq = readOGR("../something/india/AQ_station_5_10_25_pop/AQ_station_5_10_25_pop.shp") %>% st_as_sf() %>% st_drop_geometry()%>% as_tibble()
+  # # 處理同名城市問題
+  # dup_name = aq %>% dplyr::select(ID_2, NAME_1,  NAME_2) %>% group_by(NAME_2) %>% filter(n()>1) %>% mutate(NAME_2 = paste0(NAME_2, " (",NAME_1,")")) %>% ungroup %>% dplyr::select(-NAME_1)
+  # 
+  # aq = rows_update(aq, dup_name, by="ID_2")
+  # 
   # aq %<>% transmute(name = NAME_2, ID_2,
-  #                   station_all=all,
+  #                   #station_all=all,
   #                   station_all_all=all, station_all_5km = all_5km, station_all_10km = all_10km, station_all_25km=all_25km,
   #                   station_pregs_all = pregs_all, station_pregs_5km=pregs_5km, station_pregs_10km=pregs_10km, station_pregs_25km=pregs_25km, # nolint
   #                   station_child_all=child_all, station_child_5km=child_5km, station_child_10km=child_10km, station_child_25km=child_25km,
@@ -9,14 +14,29 @@ getStationData = function(countryName){
   
   # saveRDS(aq, "data/final/India_station_data.rds")
   
-  readRDS(paste0("data/final/", countryName, "_station_data.rds")) %>% st_drop_geometry() %>% as_tibble()
+  readRDS(paste0("data/final/", countryName, "_station_data.rds"))  
 }
 
 getPM25Data = function(countryName){
-  # pm25 = read.csv("../something/OldWebsite/data/final/pm25.csv")%>% as_tibble() %>% dplyr::select(-FID, -ID_0, -COUNTRY, -NAME_1, -NL_NAME_1, -NAME_2)
-  # colnames(pm25) %<>% gsub("^X", "",.)
-  # colnames(pm25) <- c(colnames(pm25)[1], paste0("pm25_", colnames(pm25[2:length(pm25)])))
-  # saveRDS(pm25, paste0("data/final/", countryName, "_pm25_data.rds"))
+  # pm = read.csv("../something/india/pm25_5_25_50_allinone/all_5_25_50_onefile.csv") %>% as_tibble()
+  # pm2 = readOGR("../something/india/pm25_5_25_50_allinone/pm25_5_25_50_allinone.shp") %>% st_as_sf() %>% st_drop_geometry() %>%as_tibble() %>% dplyr::select(ID_2,NAME_1, NAME_2)
+  # 
+  # pm %<>% left_join(pm2)
+  # 
+  # # 處理同名城市問題
+  # dup_name = pm %>% dplyr::select(ID_2, NAME_1,  NAME_2) %>% group_by(NAME_2) %>% filter(n()>1) %>% mutate(NAME_2 = paste0(NAME_2, " (",NAME_1,")")) %>% ungroup %>% dplyr::select(-NAME_1)
+  # 
+  # pm = rows_update(pm, dup_name, by="ID_2")
+  # 
+  # pm %<>% transmute(name = NAME_2, ID_2,
+  #                 # pm25_all = all_all,
+  #                  pm25_all_all = all_all, pm25_all_5u = all_pm25_5, pm25_all_25u = all_pm25_25, pm25_all_50u = all_pm25_50,
+  #                  pm25_pregs_all = pregs_all, pm25_pregs_5u = pregs_pm25_5, pm25_pregs_25u = pregs_pm25_25, pm25_pregs_50u = pregs_pm25_50,
+  #                  pm25_child_all = child_all, pm25_child_5u = child_pm25_5, pm25_child_25u = child_pm25_25, pm25_child_50u = child_pm25_50,
+  #                  pm25_old_all = X65_all, pm25_old_5u = X65_pm25_5, pm25_old_25u = X65_pm25_25, pm25_old_50u = X65_pm25_50
+  #                  )
+  # saveRDS(pm, paste0("data/final/", countryName, "_pm25_data.rds"))
+  
   readRDS(paste0("data/final/", countryName, "_pm25_data.rds"))
 }
 
@@ -64,17 +84,20 @@ getPopLayer = function(countryName){
 
 addMap_boundary = function(map, countryName){
   boundary = getBoundary(countryName)
-  layerName = paste0(countryName, " Boundary")
+  layerName = paste0(countryName, " Cities")
   
   labels <- paste0("<h4 style='text-align: center;'>",boundary$NAME_2,"</h4>") %>% lapply(htmltools::HTML)
   
   map %>%
+   # main_map %>% 
   addPolygons(
     data = boundary,
+    layerId = ~ID_2,
+    stroke = FALSE,
     fill = TRUE,
-    weight = 2,
     fillOpacity = 0,
-    color = "#B8B8B8",
+    # weight = 2,
+    # color = "#B8B8B8",
     dashArray = "3",
     highlightOptions = highlightOptions(
       weight = 5,
@@ -83,38 +106,13 @@ addMap_boundary = function(map, countryName){
       bringToFront = TRUE),
     label = labels,
     labelOptions = labelOptions(
-      style = list("font-weight" = "normal", padding = "3px 8px"),
-      textsize = "15px",
+      style = list("font-weight" = "normal"),
+      textsize = "16px",
       direction = "auto"
     ), 
-    group = layerName,
-    options = pathOptions(pane = "boundary")
+    group = layerName
+    ,options = pathOptions(pane = "boundary")
   ) 
-}
-
-addMap_AQ_station = function(map, countryName){
-  station = getStation(countryName)  
-  layerName = paste0(countryName, " AQ Station")
-  
-  map %>% 
-    addCircles(data = station,
-               group = layerName,
-               options = pathOptions(pane = "theme_AQstation")
-    )
-}
-
-addMap_pm25 = function(map, countryName){
-  pm25 = getPM25Layer(countryName)
-  layerName = paste0(countryName, " PM2.5")
-  
-  brks = c(0, 5, 25, 50, 999)
-  pal = colorBin(palette = c("#9CD84E", "#FACF38", "#F65E5F", "#7D3C98"), bins = brks, domain = brks, na.color="transparent")
-  
-  map %>%
-  # main_map %>% 
-    addRasterImage(pm25, colors = pal, opacity = 0.2, group = layerName# , options = tileOptions(pane = "theme_pm25")
-                   ) %>% 
-    addLegend(pal=pal, values = brks, title = "PM2.5 concentration", position="bottomleft")
 }
 
 addMap_pop = function(map, countryName){
@@ -123,37 +121,74 @@ addMap_pop = function(map, countryName){
   
   if(countryName=="India"){
     #pop$India_pop_count %>% values %>% na.omit() %>% .[which(.>0)] %>% summary()
-    brks = c(0, 1, 100, 200, 300, 400, 500, 7010)  
+    brks = c(0, 1, 100, 200, 300, 400, 500, 1000, 3000, 5000, 7010)  
+    labels = c("0", "<100", "100-200", "200-300", "300-400", "400-500", "500-1000", "1000-3000", "3000-5000", ">5000")
   }else if(countryName=="Tailand"){
-    brks = c(0, 1, 100, 200, 300, 400, 500, 7010)  
+    brks = c(0, 1, 100, 200, 300, 400, 500, 1000,3000,5000, 7010)  
+    labels = c("0", "<100", "100-200", "200-300", "300-400", "400-500", "500-1000", "1000-3000", "3000-5000", ">5000")
   }
   
-  pal <- colorBin(c("#FFFFFF", "black"), bins = brks, domain=brks, na.color = "transparent")
+  pal <- colorBin(palette = c("#FFFFFF", "#E3E3E3", "#999999", "#808080", "#666666", "#4d4d4d", "#333333", "#2a2a2a", "#111111", "#000000"), 
+                  bins = brks, domain=brks, na.color = "transparent")
+  
   
   map %>% 
-  # main_map %>% 
-    addRasterImage(pop, colors = pal, opacity = 0.9, group = layerName# , options = tileOptions(pane = "pop")
-                   ) %>% 
-    addLegend(pal=pal, values = brks, title = "Population", position="bottomright")
+    # main_map %>% 
+    addRasterImage(pop, colors = pal, opacity = 0.8, group = layerName# , options = tileOptions(pane = "pop")
+    ) %>% 
+    addLegend(pal=pal, values = brks, title = "Population", position="bottomright", group = layerName,
+              labFormat = function(type, cuts, p) {  paste0(labels)}
+              )
 }
+
+addMap_AQ_station = function(map, countryName){
+  station = getStation(countryName)  
+  layerName = paste0(countryName, " AQ Station")
+  layerId = paste0(countryName, "_layer_AQStation")
+  
+  map %>% 
+    addCircles(data = station,
+               group = layerName,
+               options = pathOptions(pane = "theme_AQstation")#,
+               # layerId = layerId
+    )
+}
+
+addMap_pm25 = function(map, countryName){
+  pm25 = getPM25Layer(countryName)
+  layerName = paste0(countryName, " PM2.5")
+  layerId = paste0(countryName, "_layer_legend_pm25")
+  
+  brks = c(0, 5, 25, 50, 999)
+  pal = colorBin(palette = COLOR_BRK, bins = brks, domain = brks, na.color="transparent")
+  
+  map %>%
+  # main_map %>% 
+    addRasterImage(pm25, colors = pal, opacity = 0.5, group = layerName #, options = tileOptions(pane = "theme_pm25")
+                   ) %>% 
+    addLegend(pal=pal, values = brks, title = "PM2.5 concentration", position="bottomleft", layerId = layerId)
+}
+
 
 clearMap_theme = function(map, countryName){
   theme_layer_names = paste0(countryName, c(" AQ Station", " PM2.5"))
   
   map %>% 
+    removeControl(paste0(countryName, "_layer_legend_pm25")) %>% 
     clearGroup(theme_layer_names)
+    
 }
 
 addMap_theme = function(map, themeName, countryName){
   if(themeName=="AQ Station"){
     map %>% 
       clearMap_theme(countryName) %>% 
-      clearControls() %>% 
+      # removeControl(c("layer_AQstation", "layer_pm25")) %>% 
       addMap_AQ_station(countryName)
   }else if(themeName=="PM2.5"){
     map %>% 
       clearMap_theme(countryName) %>% 
-      clearControls() %>%
+      # removeControl(c("layer_AQstation", "layer_pm25")) %>% 
       addMap_pm25(countryName)
   }
 }
@@ -161,59 +196,234 @@ addMap_theme = function(map, themeName, countryName){
 
 ### rank
 
-# countryName  = "India"
-# themeName  = "AQ Station"
-# popName = "all"
-# brk = "5km"
-
-getRankData = function(countryName, themeName, popName, brk){
-  # if(themeName=="AQ Station"){
+getRankPlotData = function(countryName, themeName, popName){
+  if(themeName=="AQ Station"){
     d = getStationData(countryName)
     fieldName = "station"
-    all_field = "station_all"
-    main_count = paste0(fieldName, "_", popName, "_",brk)
-    main_group_all = paste0(fieldName, "_", popName, "_all")
-  # }else if(themeName =="PM2.5"){
-  #   message("not yet")
-  # }
-  
-  
-    d %>% rename(all_field=!!all_field, main_count=!!main_count, main_group_all = !!main_group_all) %>%  # nolint
-      dplyr::select(name, ID_2, all_field, main_count, main_group_all ) %>% 
-    transmute(name, ID_2, main_count = round(main_count, 2), main_all_perc = round((main_count/all_field)*100, 2), main_group_perc = round((main_count/main_group_all)*100, 2))
-  
-}
-
-# draw rank plot
-# number = "main_all_perc"
-# rankData = getRankData(countryName = "India", themeName="AQ Station", popName = "pregs", brk="10km")
-drawRankChart = function(rankData, number = c("main_count", "main_all_perc", "main_group_perc")){
-  data = rankData %>% 
-    rename(number = !!number) %>% 
-    dplyr::select(name, number) %>% 
-    arrange(desc(number)) %>% head(20)
-  
-  if(number=="main_count"){
-    unit = "number of people"
-  }else{
-    unit = "percentage"
+  }else if(themeName =="PM2.5"){
+    d = getPM25Data(countryName)
+    fieldName = "pm25"
   }
   
-  plot_ly(data) %>% 
-  plotly::add_bars(y = ~name, x=~number) %>% 
-  layout(yaxis = list(title = "city name", categoryorder = "array", categoryarray = rev(data$name)),
-        xaxis = list(title = unit)
-        )
- 
+  field_selector = paste0(fieldName, "_", popName)
+  group_all = paste0(fieldName, "_", popName, "_all")
+  brks = c("A", "B", "C")
+  group_brks = paste0("group", "_", brks)
+  
+  # 暴力改名法，小心不能出錯
+  # 只成立在 Station 和 PM2.5 的 break point 組數一樣時
+  d %<>% dplyr::select(name, ID_2, group_all, starts_with(field_selector))
+  names(d) <- c("name", "ID_2", "group_all", group_brks)
+  
+  d %<>% mutate(across(-c(name, ID_2, group_all), ~ round(.x/group_all,6), .names = "{.col}_prec" ))
+  
+  if(themeName=="AQ Station"){
+    d %<>% mutate(
+      group_a_prec = group_A_prec, 
+      group_ab_prec = group_B_prec-group_A_prec,
+      group_bc_prec = group_C_prec-group_B_prec,
+      group_c_prec = 1-group_C_prec
+    )
+    
+  }
+  if(themeName=="PM2.5"){
+    d %<>% mutate(
+      group_a_prec = 1-group_A_prec,
+      group_ab_prec = group_A_prec-group_B_prec, 
+      group_bc_prec = group_B_prec-group_C_prec,
+      group_c_prec = group_C_prec
+    )
+  }
+  
+  
+    d %>% mutate(across(c("group_a_prec", "group_ab_prec", "group_bc_prec", "group_c_prec"), ~round(.x * group_all, 0), .names ="{.col}_num")) %>% 
+    rename_if(grepl("_num", names(.)), ~gsub("_prec","",.x)) %>% 
+      dplyr::select(name, ID_2, THEME_BREAK_TABLE %>% dplyr::filter(theme==themeName) %>% pull(var)) #reorder the columns
+    
+    
 }
 
 
+# d1 = getRankPlotData(countryName, themeName="PM2.5", popName="all")
+# rankPlotData = getRankPlotData(countryName, themeName="PM2.5", popName="all")
+# AQ: group_a_prec, head(100)
+
+drawStackedChart = function(rankPlotData, orderfield, themeName){
+  countryAvg = rankPlotData %>% 
+    mutate_at(.vars = vars(group_all, ends_with("_num")), .funs = sum) %>% 
+    dplyr::select_at(.vars = vars(group_all, ends_with("_num"))) %>% distinct() %>% 
+    mutate(across(ends_with("_num"), ~round(.x/group_all,6), .names = "{.col}_prec")) %>% 
+    rename_if(grepl("_num", names(.)), ~gsub("_num","",.x)) %>% 
+    mutate(name = "COUNTRY AVG") %>% 
+    mutate(across(ends_with("prec"), ~.x*100)) %>% 
+    mutate(across(ends_with("prec"), ~round(.x,2))) 
+  
+  d = rankPlotData %>% arrange_at(.vars = orderfield, desc) %>% head(100) %>% 
+    mutate(across(ends_with("prec"), ~.x*100)) %>% 
+    mutate(across(ends_with("prec"), ~round(.x,2))) 
+
+    
+  tb = THEME_BREAK_TABLE %>% filter(theme==themeName) %>% dplyr::select(-theme)
+  
+  p_avg = 
+    plot_ly(countryAvg, y=~name, x=~group_a_prec, type='bar', 
+          name = filter(tb, var=="group_a_prec")%>% pull(varName), 
+          text = filter(tb, var=="group_a_prec")%>% pull(varName), 
+          hoverinfo = "x+y",
+          hovertemplate = "%{y}: %{x}%",
+          marker = list(color = COLOR_BRK[1])) %>% 
+    add_trace(x=~group_ab_prec, 
+              name = filter(tb, var=="group_ab_prec")%>% pull(varName), 
+              text = filter(tb, var=="group_ab_prec")%>% pull(varName), 
+              hoverinfo = "x+y",
+              hovertemplate = "%{y}: %{x}%",
+              marker = list(color = COLOR_BRK[2])) %>% 
+    add_trace(x=~group_bc_prec, 
+              name = filter(tb, var=="group_bc_prec")%>% pull(varName), 
+              text = filter(tb, var=="group_bc_prec")%>% pull(varName), 
+              hoverinfo = "x+y",
+              hovertemplate = "%{y}: %{x}%",
+              marker = list(color = COLOR_BRK[3])) %>% 
+    add_trace(x=~group_c_prec, 
+              name = filter(tb, var=="group_c_prec")%>% pull(varName), 
+              text = filter(tb, var=="group_c_prec")%>% pull(varName), 
+              hoverinfo = "x+y",
+              hovertemplate = "%{y}: %{x}%",
+              marker = list(color = COLOR_BRK[4])) %>% 
+    layout(barmode = 'stack', showlegend = FALSE,
+           xaxis = list(title = "%"),
+           yaxis = list(title = "", categoryorder = "array", categoryarray = rev(d$name))
+    )
+  
+  
+  ###
+  p = plot_ly(d, y=~name, x=~group_a_prec, type='bar', 
+                name = filter(tb, var=="group_a_prec")%>% pull(varName), 
+                text = filter(tb, var=="group_a_prec")%>% pull(varName), 
+                hoverinfo = "x+y",
+                hovertemplate = "%{y}: %{x}%",
+                marker = list(color = COLOR_BRK[1])) %>% 
+      add_trace(x=~group_ab_prec, 
+                name = filter(tb, var=="group_ab_prec")%>% pull(varName), 
+                text = filter(tb, var=="group_ab_prec")%>% pull(varName), 
+                hoverinfo = "x+y",
+                hovertemplate = "%{y}: %{x}%",
+                marker = list(color = COLOR_BRK[2])) %>% 
+      add_trace(x=~group_bc_prec, 
+                name = filter(tb, var=="group_bc_prec")%>% pull(varName), 
+                text = filter(tb, var=="group_bc_prec")%>% pull(varName), 
+                hoverinfo = "x+y",
+                hovertemplate = "%{y}: %{x}%",
+                marker = list(color = COLOR_BRK[3])) %>% 
+      add_trace(x=~group_c_prec, 
+                name = filter(tb, var=="group_c_prec")%>% pull(varName), 
+                text = filter(tb, var=="group_c_prec")%>% pull(varName), 
+                hoverinfo = "x+y",
+                hovertemplate = "%{y}: %{x}%",
+                marker = list(color = COLOR_BRK[4])) %>% 
+      layout(barmode = 'stack', showlegend = FALSE,
+             xaxis = list(title = "%"),
+             yaxis = list(title = "", categoryorder = "array", categoryarray = rev(d$name))
+             )
+
+    subplot(p_avg, p, nrows=2, shareX = TRUE, heights = c(0.05, 0.95),
+            margin = 0.005
+            )
+
+}
 
 
+getRankTable = function(rankPlotData, themeName){
+  field_show = c("name", "group_all",
+                 "group_a_num", "group_ab_num", "group_bc_num", "group_c_num",
+                 "group_a_prec", "group_ab_prec", "group_bc_prec", "group_c_prec")
+  d = rankPlotData %>% dplyr::select(!!field_show) %>% arrange(desc(group_all))
+  tb = THEME_BREAK_TABLE %>% filter(theme==themeName) %>% dplyr::select(-theme) %>% 
+    filter(var%in%field_show)
+  names(d) <- c("city name", tb %>% pull(varName))
+  
+  
+  d
+}
+
+#### City Inspect ####
+# d = getStationData(countryName)
+
+generateUI_city_situation = function(this_data, field, popName){
+  #this_data #%>% dplyr::select(name, starts_with(paste0(field, "_", popName)))
+  # field_total_all = paste0(field, "_all_all")
+  # field_child_all = paste0(field, "_child_all")
+  # field_old_all = paste0(field, "_old_all")
+  # field_pregs_all = paste0(field, "_pregs_all")
+  # 
+  
+  
+  
+  field_all = paste0(field, "_",popName,"_all")
+  
+  generatePopRow = function(this_data, popName, field_all){
+    numberFormat = function(num){
+      formatC(num, format="f", big.mark=",", digits=0)
+    }
+    
+    if(popName=="all"){
+      title = "Total Population:"
+    }
+    if(popName=="child"){
+      title = "Total Infant (0-4):"
+    }
+    if(popName=="old"){
+      title = "Total Elderlies (65+):"
+    }
+    if(popName=="pregs"){
+      title = "Total Pregnant Women:"
+    }
+    
+    
+    HTML('<tr style="height: 18px;">
+      <td style="width: 50%; height: 18px;">', title,'</td>
+      <td style="width: 50%; height: 18px;">', this_data %>% pull(field_all) %>% numberFormat,'</td>
+      </tr>')
+  }
+  
+  
+  div(class="city_situation",
+      h3(paste0(this_data$name)),
+      hr(),
+      HTML('
+      <table style="height: 72px; width: 50%; border-collapse: collapse;" border="0">
+      <tbody>
+      ',generatePopRow(this_data, popName, field_all),'
+      </tbody>
+      </table>
+      ')
+  )
+  
+}
 
 
-
-
-
-
-
+drawRankChart_city = function(rankPlotData, bound_id, themeName){
+  tb = THEME_BREAK_TABLE %>% filter(theme==themeName) %>% dplyr::select(-theme)
+  
+  dt = rankPlotData %>% filter(ID_2==bound_id) %>% 
+    tidyr::gather("var", "value") %>% 
+    filter(var%in%c("group_a_prec", "group_ab_prec", "group_bc_prec", "group_c_prec")) %>% 
+    mutate(value = as.numeric(value) %>% "*"(100) %>% round(2)) %>% 
+    left_join(., tb, by="var")
+  
+  
+  plot_ly(dt, y = ~varName, x=~value, type="bar", 
+          text = ~paste0(value, "%"), 
+          textposition = 'auto', 
+          hoverinfo = "y",
+          hoverlabel = list(font = list(size=18)),
+          marker = list(color=COLOR_BRK)
+          ) %>% 
+    layout(
+      font = list(size=18),
+      yaxis=list(title="", categoryorder = "array", categoryarray = rev(dt$varName), 
+                 showticklabels = FALSE
+                 ), 
+      xaxis = list(title = "%"))
+    
+}

@@ -34,14 +34,15 @@ navbarPage(
                                                   inputId = "theme_selector",
                                                   label = "select theme:",
                                                   choices = c(
-                                                      "PM2.5 pollution"="PM2.5",       
-                                                      "AQM station"="AQ Station"
+                                                      "AQM station"="AQ Station",
+                                                      "PM2.5 pollution"="PM2.5"       
                                                              ),
-                                                  justified = TRUE
+                                                  justified = TRUE,
+                                                  checkIcon = list(yes = icon("ok", lib = "glyphicon"))
                                               ),
                                               pickerInput(
                                                   inputId = "pop_selector",
-                                                  label = "select population ",
+                                                  label = "select group population ",
                                                   choices = c("All Population"="all", 
                                                               "Infant (0-4)" ="child", 
                                                               "Elderlies (65+)" = "old", 
@@ -54,37 +55,34 @@ navbarPage(
                                ), 
                                fluidRow(
                                    tabsetPanel(type = "tabs",
-                                               tabPanel("Rank 20 Cities",
-                                                        
-                                                        div(class="rank20_selector", style="display:inline",
-                                                            wellPanel(
-                                                                pickerInput(
-                                                                    inputId = "brk_selector",
-                                                                    label = "select break point",
-                                                                    choices = c("5 km"="5km", 
-                                                                                "10 km" ="10km", 
-                                                                                "25 km" = "25km"
-                                                                    )
-                                                                ),
-                                                                pickerInput(
-                                                                    inputId = "number_selector",
-                                                                    label = "select display number",
-                                                                    choices = c("number of people"="main_count", 
-                                                                                "% of all people" ="main_all_perc", 
-                                                                                "% of this population" = "main_group_perc"
-                                                                    )
-                                                                )    
-                                                            )
-                                                        ),
-                                                        
+                                               tabPanel("Cities Rank",
                                                         navlistPanel(widths = c(2, 10),
-                                                            tabPanel("Plot", plotlyOutput("rank20_chart")),
-                                                            tabPanel("Table", DT::dataTableOutput("rank20_table"))
+                                                            tabPanel("Plot", 
+                                                                     conditionalPanel(
+                                                                         condition = "input.theme_selector=='PM2.5'",
+                                                                             wellPanel(
+                                                                                 radioGroupButtons(
+                                                                                     inputId = "select_pm25_rank_order",
+                                                                                     label = "select rank order",
+                                                                                     choices = c("good AQ"="group_a_prec", 
+                                                                                                 "bad AQ"="group_c_prec"
+                                                                                     ),
+                                                                                     justified = TRUE
+                                                                                 )
+                                                                             )
+                                                                     ),
+                                                                     plotlyOutput("rank_stacked_chart", width = "500px", height = "1600px")
+                                                            ),
+                                                            tabPanel("Table", DT::dataTableOutput("rank_table"))
                                                             
                                                         )
                                                         
                                                         ),
-                                               tabPanel("City Situation")
+                                               tabPanel("Inspect City",
+                                                        uiOutput("ui_city_situaion"),
+                                                        plotlyOutput("plot_city_propotion")
+                                               )
+                                               
                                    )
                                    
                                )
