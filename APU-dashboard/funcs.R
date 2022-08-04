@@ -73,13 +73,17 @@ getPM25Layer = function(countryName){
   raster(paste0("data/final/", countryName, "_pm25.tiff"))
 }
 
-getPopLayer = function(countryName){
-  # r = raster(../something/india/India_pop_count.tiff)
-  
-  # saveRDS(r, "data/final/India_pop_count_tiff.rds")
-  # readRDS(paste0("data/final/",countryName,"_pop_tiff.rds"))
-  raster(paste0("data/final/", countryName, "_pop.tiff"))
-  
+# getPopLayer = function(countryName){
+#   # r = raster(../something/india/India_pop_count.tiff)
+# 
+#   # saveRDS(r, "data/final/India_pop_count_tiff.rds")
+#   # readRDS(paste0("data/final/",countryName,"_pop_tiff.rds"))
+#   raster(paste0("data/final/", countryName, "_pop.tiff"))
+# 
+# }
+
+getPopNameLayer = function(countryName, popName=c("pop", "pregs", "old", "infant")){
+  raster(paste0("data/final/", countryName, "_", popName,".tiff"))
 }
 
 addMap_boundary = function(map, countryName){
@@ -93,17 +97,25 @@ addMap_boundary = function(map, countryName){
   addPolygons(
     data = boundary,
     layerId = ~ID_2,
-    stroke = FALSE,
-    fill = TRUE,
-    fillOpacity = 0,
-    # weight = 2,
-    # color = "#B8B8B8",
+    
+    ###### no hide ######
+    weight = 2,
+    opacity = 1,
+    color = "#999",
     dashArray = "3",
+    fillOpacity = 0,
+    
+    ###### hide ######
+    # stroke = FALSE,
+    # fill = TRUE,
+    # fillOpacity = 0,
+    # dashArray = "3",
     highlightOptions = highlightOptions(
       weight = 5,
       color = "red",
       dashArray = "",
       bringToFront = TRUE),
+    ######
     label = labels,
     labelOptions = labelOptions(
       style = list("font-weight" = "normal"),
@@ -111,35 +123,113 @@ addMap_boundary = function(map, countryName){
       direction = "auto"
     ), 
     group = layerName
-    ,options = pathOptions(pane = "boundary")
+    # ,options = pathOptions(pane = "boundary")
   ) 
 }
 
-addMap_pop = function(map, countryName){
-  pop = getPopLayer(countryName)
-  layerName = paste0(countryName, " Population")
-  
-  if(countryName=="India"){
-    #pop$India_pop_count %>% values %>% na.omit() %>% .[which(.>0)] %>% summary()
-    brks = c(0, 1, 100, 200, 300, 400, 500, 1000, 3000, 5000, 7010)  
-    labels = c("0", "<100", "100-200", "200-300", "300-400", "400-500", "500-1000", "1000-3000", "3000-5000", ">5000")
-  }else if(countryName=="Tailand"){
-    brks = c(0, 1, 100, 200, 300, 400, 500, 1000,3000,5000, 7010)  
-    labels = c("0", "<100", "100-200", "200-300", "300-400", "400-500", "500-1000", "1000-3000", "3000-5000", ">5000")
+# addMap_pop = function(map, countryName){
+#   pop = getPopNameLayer(countryName, "all")
+#   layerName = paste0(countryName, " Population")
+#   
+#   if(countryName=="India"){
+#     #pop$India_pop_count %>% values %>% na.omit() %>% .[which(.>0)] %>% summary()
+#     brks = c(0, 1, 100, 200, 300, 400, 500, 1000, 3000, 5000, 7010)  
+#     labels = c("0", "<100", "100-200", "200-300", "300-400", "400-500", "500-1000", "1000-3000", "3000-5000", ">5000")
+#   }else if(countryName=="Tailand"){
+#     brks = c(0, 1, 100, 200, 300, 400, 500, 1000,3000,5000, 7010)  
+#     labels = c("0", "<100", "100-200", "200-300", "300-400", "400-500", "500-1000", "1000-3000", "3000-5000", ">5000")
+#   }
+#   
+#   pal <- colorBin(palette = c("transparent", "#E3E3E3", "#999999", "#808080", "#666666", "#4d4d4d", "#333333", "#2a2a2a", "#111111", "#000000"), 
+#                   bins = brks, domain=brks, na.color = "transparent")
+#   
+#   
+#   map %>% 
+#     # main_map %>% 
+#     addRasterImage(pop, colors = pal, opacity = 0.3, group = layerName, options = tileOptions(pane = "pop")
+#     ) %>% 
+#     addLegend(pal=pal, values = brks, title = "Population", position="bottomright", group = layerName,
+#               labFormat = function(type, cuts, p) {  paste0(labels)}
+#               )
+# }
+
+# popName = "pregs"
+# addMap_popName = function(map, countryName, popName){
+#   layerName = paste0(countryName, "_", popName)
+#   country_pop_layer_name = paste0(countryName, " Selected Group Population")
+#   
+#   map %>%
+#   # main_map %>% 
+#     addWMSTiles(
+#       WMS_URL,
+#       layers = layerName,
+#       layerId = country_pop_layer_name,
+#       group = country_pop_layer_name,
+#       options = WMSTileOptions(format = "image/png", transparent = TRUE
+#                                , pane = "pop"
+#                                )
+#     ) %>% 
+#     addWMSLegend(
+#       uri = paste0(WMS_LEGEND_URL, layerName),
+#       layerId = country_pop_layer_name
+#     )
+#   
+# }
+
+
+addMap_popName = function(map, countryName, popName){
+  popRaster = getPopNameLayer(countryName, popName)
+  # layerName = paste0(countryName, " Population")
+  country_pop_layer_name = paste0(countryName, " Selected Group Population")
+
+
+  if(countryName=="India" & popName=="pregs"){
+    # brks = brks_pregs
+    brks = c(0, 1, 5, 10, 20, 30, 60, 100, 200, 300, 605) #11
+    labels = c("0", "< 5", "5 - 10", "10 - 20", "20 - 30", "30 - 60", "60 - 100", "100 - 200", "200 - 300", "> 300") #10
+    color_palette = c("transparent", "#E3E3E3", "#999999", "#808080", "#666666", "#4d4d4d", "#333333", "#2a2a2a", "#111111", "#000000")
+    layerTitle = paste0(countryName, " Pregnant Women")
+    values(popRaster)[values(popRaster) < 1] = NA
   }
-  
-  pal <- colorBin(palette = c("#FFFFFF", "#E3E3E3", "#999999", "#808080", "#666666", "#4d4d4d", "#333333", "#2a2a2a", "#111111", "#000000"), 
-                  bins = brks, domain=brks, na.color = "transparent")
-  
-  
-  map %>% 
-    # main_map %>% 
-    addRasterImage(pop, colors = pal, opacity = 0.8, group = layerName# , options = tileOptions(pane = "pop")
-    ) %>% 
-    addLegend(pal=pal, values = brks, title = "Population", position="bottomright", group = layerName,
-              labFormat = function(type, cuts, p) {  paste0(labels)}
-              )
+  if(countryName=="India" & popName=="old"){
+    brks = c(  0, 1, 3, 5, 15, 50, 100, 150, 250, 350) #10
+    labels = c("0", "< 3", "3 - 5" ,"5 - 15", "15 - 50", "50 - 100", "100 - 150", "150 - 250", "> 250") #9
+    color_palette = c("transparent", "#E3E3E3", "#999999", "#808080", "#666666", "#4d4d4d", "#2a2a2a", "#111111", "#000000")
+    layerTitle = paste0(countryName, " Elderlies (65+)")
+    values(popRaster)[values(popRaster) < 0.013] = NA
+  }
+  if(countryName=="India" & popName=="child"){
+    brks = c(0, 1, 5, 10, 20, 40, 60) #7
+    labels = c("0", "< 5", "5 -10", "10 - 20", "20 - 40", "> 40") #6
+    color_palette = c("transparent", "#E3E3E3", "#808080",  "#333333", "#2a2a2a", "#000000")
+    layerTitle = paste0(countryName, " Infants (0-4)")
+    values(popRaster)[values(popRaster) <= 0.004] = NA
+  }
+  if(countryName=="India" & popName=="all"){
+    brks = c(0, 100, 200, 300, 400, 500, 1000, 3000, 5000, 7010) #11
+    labels = c("< 100", "100 - 200", "200 - 300", "300 - 400", "400 - 500", "500 - 1,000", "1,000 - 3,000", "3,000 - 5,000", "> 5,000") #10
+    color_palette = c("transparent", "#E3E3E3", "#999999", "#808080", "#666666", "#4d4d4d", "#333333", "#2a2a2a", "#111111", "#000000")
+    layerTitle = paste0(countryName, " All Population")
+    values(popRaster)[values(popRaster) < 1] = NA
+  }
+
+
+  pal <- colorBin(palette = color_palette, bins = brks, pretty = TRUE,
+                  domain=brks, na.color = "transparent")
+
+
+  map %>%
+    # main_map %>%
+    addRasterImage(popRaster, colors = pal, opacity = 0.7, group = country_pop_layer_name , options = tileOptions(pane = "pop")
+    ) %>%
+    addLegend(pal=pal, values = brks, title = layerTitle, position="bottomleft", group = country_pop_layer_name, layerId = country_pop_layer_name
+              # ,labFormat = function(type, cuts, p) {  paste0(labels) }
+    )
+
+
 }
+
+
 
 addMap_AQ_station = function(map, countryName){
   station = getStation(countryName)  
@@ -149,8 +239,7 @@ addMap_AQ_station = function(map, countryName){
   map %>% 
     addCircles(data = station,
                group = layerName,
-               options = pathOptions(pane = "theme_AQstation")#,
-               # layerId = layerId
+               options = pathOptions(pane = "theme_AQstation")
     )
 }
 
@@ -258,7 +347,7 @@ drawStackedChart = function(rankPlotData, orderfield, themeName){
     mutate(across(ends_with("prec"), ~.x*100)) %>% 
     mutate(across(ends_with("prec"), ~round(.x,2))) 
   
-  d = rankPlotData %>% arrange_at(.vars = orderfield, desc) %>% head(100) %>% 
+  d = rankPlotData %>% arrange_at(.vars = orderfield, desc) %>% head(50) %>% 
     mutate(across(ends_with("prec"), ~.x*100)) %>% 
     mutate(across(ends_with("prec"), ~round(.x,2))) 
 

@@ -6,6 +6,7 @@ suppressPackageStartupMessages({
   library(magrittr)
   library(dplyr)
   library(leaflet)
+  # library(leaflet.extras)
   library(rgdal)
   library(shinyWidgets)
   library(sf)
@@ -22,15 +23,28 @@ suppressPackageStartupMessages({
 cssFile = list.files("www")[grep(".css", list.files("www"))]
 source("funcs.R")
 
+BASE_GROUPS = c("Voyager","WorldGray", "Positron", "StamenTerrainBackground",  "StamenTerrain", "WorldImagery")
+
 main_map =
   leaflet() %>%
-  addProviderTiles(providers$Esri.WorldGrayCanvas, group = "WorldGray") %>%
-  addProviderTiles(providers$CartoDB.VoyagerNoLabels, group = "Voyager") %>%
-  addProviderTiles(providers$CartoDB.PositronNoLabels, group = "Positron") %>%
+  addProviderTiles(providers$CartoDB.VoyagerNoLabels, group = BASE_GROUPS[1]) %>%
+  addProviderTiles(providers$Esri.WorldGrayCanvas, group = BASE_GROUPS[2]) %>%
+  addProviderTiles(providers$CartoDB.PositronNoLabels, group = BASE_GROUPS[3]) %>%
+  addProviderTiles(providers$Stamen.TerrainBackground, group = BASE_GROUPS[4]) %>%
+  addProviderTiles(providers$Stamen.Terrain, group = BASE_GROUPS[5]) %>%
+  addProviderTiles(providers$Esri.WorldImagery, group = BASE_GROUPS[6]) %>%
   setView(lng=78, lat=22, zoom=5.1)
 
+main_map %<>%
+  addMapPane("pop", zIndex=410) %>%
+  addLayersControl(
+    baseGroups = BASE_GROUPS,
+    options = layersControlOptions(collapsed = FALSE)
+  )
 
-
+WMS_URL = "http://localhost:8080/geoserver/apu/wms"
+WMS_LEGEND_URL = "http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20
+    &legend_options=forceLabels:on;forceTitles:on&LAYER=apu:"
 
 COLOR_BRK = c("#9CD84E", "#FAA238", "#DF3233", "#7D3C98")
 

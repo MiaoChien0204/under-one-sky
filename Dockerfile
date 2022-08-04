@@ -19,7 +19,7 @@ RUN R -e "install.packages(c('crosstalk','htmlwidgets','markdown','png','RColorB
 RUN R -e "install.packages(c('dplyr', 'leaflet', 'lubridate', 'shinyWidgets', 'DT'))"
 RUN R -e "install.packages(c('plotly', 'sf', 'mongolite', 'shinydashboard', 'shinycssloaders','shinythemes', 'devtools'))"
 RUN R -e "install.packages('rgdal', repos = 'http://cran.us.r-project.org', type = 'source')"
-# RUN R -e "devtools::install_github('rstudio/leaflet', ref='joe/feature/raster-options', force=TRUE)"
+RUN R -e "devtools::install_github('rstudio/leaflet', ref='joe/feature/raster-options', force=TRUE)"
 
 
 

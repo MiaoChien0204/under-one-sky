@@ -44,7 +44,7 @@ navbarPage(
                                                   inputId = "pop_selector",
                                                   label = "select group population ",
                                                   choices = c("All Population"="all", 
-                                                              "Infant (0-4)" ="child", 
+                                                              "Infants (0-4)" ="child", 
                                                               "Elderlies (65+)" = "old", 
                                                               "Pregnant Woman" = "pregs"
                                                               )

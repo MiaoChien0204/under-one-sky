@@ -37,14 +37,14 @@ shinyServer(function(input, output) {
 
         leafletProxy("main_map") %>%
             # main_map %>%
-            addMapPane("boundary", zIndex=430) %>% # 最上
-            addMapPane("pop", zIndex=420) %>% #中間
-            addMapPane("theme_pm25", zIndex=410) %>% #最下
-            addMapPane("theme_AQstation", zIndex = 430) %>% # 最上
+            addMapPane("boundary", zIndex=490) %>% # 最上
+            addMapPane("pop", zIndex=410) %>% #最下
+            addMapPane("theme_pm25", zIndex=430) %>% # 最上
+            addMapPane("theme_AQstation", zIndex = 420) %>% #中間 
             setView(lng=view$lng, lat=view$lat, zoom=view$zoom) %>%
             setMaxBounds(lng1=102, lat1=40, lng2=53, lat2=1) %>% 
-            addMap_boundary(countryName = countryName) %>%
-            addMap_pop(countryName=countryName)
+            addMap_boundary(countryName = countryName) #%>%
+            # addMap_pop(countryName=countryName)
         
        
         
@@ -58,19 +58,36 @@ shinyServer(function(input, output) {
         
         
         country_boundary_layer_name = paste0(countryName, " Cities")
-        country_pop_layer_name = paste0(countryName, " Population")
         country_theme_layer_name = paste0(countryName, " ", themeName)
+        country_pop_layer_name = paste0(countryName, " Selected Group Population")
 
         leafletProxy("main_map") %>%
             ## main_map %>%
             addMap_theme(themeName=themeName, countryName = countryName) %>%
             addLayersControl(
-                baseGroups = c("Voyager", "WorldGray", "Positron"),
-                overlayGroups = c(country_theme_layer_name, country_boundary_layer_name, country_pop_layer_name),
+                baseGroups = BASE_GROUPS,
+                overlayGroups = c(country_theme_layer_name, country_boundary_layer_name
+                                  , country_pop_layer_name
+                                  ),
                 options = layersControlOptions(collapsed = FALSE)
-            ) %>% hideGroup(country_pop_layer_name)
+            ) #%>% hideGroup(country_pop_layer_name)
 
         
+    })
+    
+    observeEvent(popName(), {
+      countryName = countryName()
+      popName = popName()
+      
+      country_pop_layer_name = paste0(countryName, " Selected Group Population")
+      
+      
+      leafletProxy("main_map") %>%
+        clearGroup(country_pop_layer_name) %>% 
+        # removeControl() %>% 
+        addMap_popName(countryName = countryName, popName = popName) 
+      
+      
     })
     
     ##### Cities Rank ######
@@ -78,7 +95,6 @@ shinyServer(function(input, output) {
       themeName()
       popName()
       pm25_rank_order()
-      
       1
     }, {
       countryName = countryName()
@@ -132,7 +148,6 @@ shinyServer(function(input, output) {
     
     
     ##### Inspect City ######
-
     observeEvent({
       input$main_map_shape_click
       popName()
