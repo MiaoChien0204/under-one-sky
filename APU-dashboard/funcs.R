@@ -1,20 +1,16 @@
+getCountryNameAbbr = function(countryName, tolower=TRUE){
+  COUNTRIES = c("Colombia" = "COL", "India" = "IND", "Indonesia" = "IDN", "Malaysia" = "MYS", "Philippines" = "PHL", "SouthAfrica" = "ZAF", "Thailand" = "THA", "Turkey" = "TUR")
+  name = COUNTRIES[countryName] %>% unname
+  if(tolower){
+    tolower(name)
+  }else{
+    name
+  } 
+}
+
+
 getStationData = function(countryName){
-  # aq = readOGR("../something/india/AQ_station_5_10_25_pop/AQ_station_5_10_25_pop.shp") %>% st_as_sf() %>% st_drop_geometry()%>% as_tibble()
-  # # 處理同名城市問題
-  # dup_name = aq %>% dplyr::select(ID_2, NAME_1,  NAME_2) %>% group_by(NAME_2) %>% filter(n()>1) %>% mutate(NAME_2 = paste0(NAME_2, " (",NAME_1,")")) %>% ungroup %>% dplyr::select(-NAME_1)
-  # 
-  # aq = rows_update(aq, dup_name, by="ID_2")
-  # 
-  # aq %<>% transmute(name = NAME_2, ID_2,
-  #                   #station_all=all,
-  #                   station_all_all=all, station_all_5km = all_5km, station_all_10km = all_10km, station_all_25km=all_25km,
-  #                   station_pregs_all = pregs_all, station_pregs_5km=pregs_5km, station_pregs_10km=pregs_10km, station_pregs_25km=pregs_25km, # nolint
-  #                   station_child_all=child_all, station_child_5km=child_5km, station_child_10km=child_10km, station_child_25km=child_25km,
-  #                   station_old_all=old_all, station_old_5km=old_5km, station_old_10km=old_10km, station_old_25km=old_25km)
-  
-  # saveRDS(aq, "data/final/India_station_data.rds")
-  
-  readRDS(paste0("data/final/", countryName, "_station_data.rds"))  
+  readRDS(paste0("data/final/", getCountryNameAbbr(countryName), "_station_data.rds"))  
 }
 
 getPM25Data = function(countryName){
@@ -37,7 +33,7 @@ getPM25Data = function(countryName){
   #                  )
   # saveRDS(pm, paste0("data/final/", countryName, "_pm25_data.rds"))
   
-  readRDS(paste0("data/final/", countryName, "_pm25_data.rds"))
+  readRDS(paste0("data/final/", getCountryNameAbbr(countryName), "_pm25_data.rds"))
 }
 
 getBoundary = function(countryName){
@@ -52,38 +48,23 @@ getBoundary = function(countryName){
   # border_sp %<>% left_join(station, by="ID_2") %>% left_join(pm25, by="ID_2")
   # saveRDS(border_sp, paste0("data/final/",countryName,"_border.rds"))
    
-  readRDS(paste0("data/final/",countryName,"_border.rds")) 
+  readRDS(paste0("data/final/",getCountryNameAbbr(countryName),"_border.rds")) 
 }
 
 getStation = function(countryName){
-  # india_bound = getBoundary(countryName) %>% st_as_sf
-  # all_station = jsonlite::fromJSON("OldWebsite/data/csv.json")
-  # all_station = lapply(all_station$features$geometry$coordinates, FUN = function(p){
-  #   tibble(lon = p[1] %>% as.numeric(),lat = p[2] %>% as.numeric())
-  # }) %>% bind_rows()
-  # all_station_sf = st_as_sf(all_station, coords = c("lon", "lat")) %>%
-  #   st_set_crs(st_crs(india_bound))
-  # india_station_sf = st_filter(all_station_sf, india_bound)
-  # saveRDS(india_station_sf, "data/final/india_station.rds")
-  readRDS(paste0("data/final/",countryName,"_station.rds"))
+  readRDS(paste0("data/final/",getCountryNameAbbr(countryName),"_station.rds"))
 }
 
 getPM25Layer = function(countryName){
-  # readRDS(paste0("data/final/",countryName,"_pm25_tiff.rds"))
-  raster(paste0("data/final/", countryName, "_pm25.tiff"))
+  raster(paste0("data/final/", getCountryNameAbbr(countryName), "_pm25.tif"))
 }
 
-# getPopLayer = function(countryName){
-#   # r = raster(../something/india/India_pop_count.tiff)
-# 
-#   # saveRDS(r, "data/final/India_pop_count_tiff.rds")
-#   # readRDS(paste0("data/final/",countryName,"_pop_tiff.rds"))
-#   raster(paste0("data/final/", countryName, "_pop.tiff"))
-# 
-# }
-
 getPopNameLayer = function(countryName, popName=c("pop", "pregs", "old", "infant")){
-  raster(paste0("data/final/", countryName, "_", popName,".tiff"))
+  raster(paste0("data/final/", getCountryNameAbbr(countryName), "_", popName,".tif"))
+}
+
+getPopNameLayerBrk = function(countryName, popName=c("pop", "pregs", "old", "infant")){
+  readRDS(paste0("data/final/", getCountryNameAbbr(countryName), "_", popName,"_brk.rds"))
 }
 
 addMap_boundary = function(map, countryName){
@@ -123,98 +104,41 @@ addMap_boundary = function(map, countryName){
       direction = "auto"
     ), 
     group = layerName
-    # ,options = pathOptions(pane = "boundary")
+    ,options = pathOptions(pane = "boundary")
   ) 
 }
-
-# addMap_pop = function(map, countryName){
-#   pop = getPopNameLayer(countryName, "all")
-#   layerName = paste0(countryName, " Population")
-#   
-#   if(countryName=="India"){
-#     #pop$India_pop_count %>% values %>% na.omit() %>% .[which(.>0)] %>% summary()
-#     brks = c(0, 1, 100, 200, 300, 400, 500, 1000, 3000, 5000, 7010)  
-#     labels = c("0", "<100", "100-200", "200-300", "300-400", "400-500", "500-1000", "1000-3000", "3000-5000", ">5000")
-#   }else if(countryName=="Tailand"){
-#     brks = c(0, 1, 100, 200, 300, 400, 500, 1000,3000,5000, 7010)  
-#     labels = c("0", "<100", "100-200", "200-300", "300-400", "400-500", "500-1000", "1000-3000", "3000-5000", ">5000")
-#   }
-#   
-#   pal <- colorBin(palette = c("transparent", "#E3E3E3", "#999999", "#808080", "#666666", "#4d4d4d", "#333333", "#2a2a2a", "#111111", "#000000"), 
-#                   bins = brks, domain=brks, na.color = "transparent")
-#   
-#   
-#   map %>% 
-#     # main_map %>% 
-#     addRasterImage(pop, colors = pal, opacity = 0.3, group = layerName, options = tileOptions(pane = "pop")
-#     ) %>% 
-#     addLegend(pal=pal, values = brks, title = "Population", position="bottomright", group = layerName,
-#               labFormat = function(type, cuts, p) {  paste0(labels)}
-#               )
-# }
-
-# popName = "pregs"
-# addMap_popName = function(map, countryName, popName){
-#   layerName = paste0(countryName, "_", popName)
-#   country_pop_layer_name = paste0(countryName, " Selected Group Population")
-#   
-#   map %>%
-#   # main_map %>% 
-#     addWMSTiles(
-#       WMS_URL,
-#       layers = layerName,
-#       layerId = country_pop_layer_name,
-#       group = country_pop_layer_name,
-#       options = WMSTileOptions(format = "image/png", transparent = TRUE
-#                                , pane = "pop"
-#                                )
-#     ) %>% 
-#     addWMSLegend(
-#       uri = paste0(WMS_LEGEND_URL, layerName),
-#       layerId = country_pop_layer_name
-#     )
-#   
-# }
-
 
 addMap_popName = function(map, countryName, popName){
   popRaster = getPopNameLayer(countryName, popName)
   # layerName = paste0(countryName, " Population")
   country_pop_layer_name = paste0(countryName, " Selected Group Population")
+  brks = getPopNameLayerBrk(countryName, popName)
 
-
-  if(countryName=="India" & popName=="pregs"){
-    # brks = brks_pregs
-    brks = c(0, 1, 5, 10, 20, 30, 60, 100, 200, 300, 605) #11
-    labels = c("0", "< 5", "5 - 10", "10 - 20", "20 - 30", "30 - 60", "60 - 100", "100 - 200", "200 - 300", "> 300") #10
-    color_palette = c("transparent", "#E3E3E3", "#999999", "#808080", "#666666", "#4d4d4d", "#333333", "#2a2a2a", "#111111", "#000000")
-    layerTitle = paste0(countryName, " Pregnant Women")
-    values(popRaster)[values(popRaster) < 1] = NA
-  }
-  if(countryName=="India" & popName=="old"){
-    brks = c(  0, 1, 3, 5, 15, 50, 100, 150, 250, 350) #10
-    labels = c("0", "< 3", "3 - 5" ,"5 - 15", "15 - 50", "50 - 100", "100 - 150", "150 - 250", "> 250") #9
-    color_palette = c("transparent", "#E3E3E3", "#999999", "#808080", "#666666", "#4d4d4d", "#2a2a2a", "#111111", "#000000")
-    layerTitle = paste0(countryName, " Elderlies (65+)")
-    values(popRaster)[values(popRaster) < 0.013] = NA
-  }
-  if(countryName=="India" & popName=="child"){
-    brks = c(0, 1, 5, 10, 20, 40, 60) #7
-    labels = c("0", "< 5", "5 -10", "10 - 20", "20 - 40", "> 40") #6
-    color_palette = c("transparent", "#E3E3E3", "#808080",  "#333333", "#2a2a2a", "#000000")
-    layerTitle = paste0(countryName, " Infants (0-4)")
-    values(popRaster)[values(popRaster) <= 0.004] = NA
-  }
-  if(countryName=="India" & popName=="all"){
-    brks = c(0, 100, 200, 300, 400, 500, 1000, 3000, 5000, 7010) #11
-    labels = c("< 100", "100 - 200", "200 - 300", "300 - 400", "400 - 500", "500 - 1,000", "1,000 - 3,000", "3,000 - 5,000", "> 5,000") #10
-    color_palette = c("transparent", "#E3E3E3", "#999999", "#808080", "#666666", "#4d4d4d", "#333333", "#2a2a2a", "#111111", "#000000")
+  if(popName=="all"){
+    # brks = c(0, 100, 200, 300, 400, 500, 1000, 3000, 5000, 7010) #11
+    # brks = c(0, 15, 40, 80, 160, 400, 1000, 2000, 4500, 6500, Inf)
     layerTitle = paste0(countryName, " All Population")
-    values(popRaster)[values(popRaster) < 1] = NA
+    # values(popRaster)[values(popRaster) == 0] = NA
   }
+  if(popName=="old"){
+    # brks = c(0, 1, 3, 6, 15, 40, 100, 150, 200, 350, Inf)
+    layerTitle = paste0(countryName, " Elderlies (65+)")
+    # values(popRaster)[values(popRaster) == 0] = NA
+  }
+  if(popName=="pregs"){
+    # brks = c(0, 6, 15, 30, 60, 120, 250, 400, 650, Inf)
+    layerTitle = paste0(countryName, " Pregnant Women")
+    # values(popRaster)[values(popRaster) == 0] = NA
+  }
+  if(popName=="child"){
+    # brks = c(0, 0.3, 0.8, 1.5, 3.5, 8.5, 21, 40, 70, Inf)
+    layerTitle = paste0(countryName, " Infants (0-4)")
+    # values(popRaster)[values(popRaster) == 0] = NA
+  }
+  
 
 
-  pal <- colorBin(palette = color_palette, bins = brks, pretty = TRUE,
+  pal <- colorBin(palette = c("#f0f0f0", "black"), bins = brks, pretty = TRUE, 
                   domain=brks, na.color = "transparent")
 
 
@@ -228,8 +152,6 @@ addMap_popName = function(map, countryName, popName){
 
 
 }
-
-
 
 addMap_AQ_station = function(map, countryName){
   station = getStation(countryName)  

@@ -11,7 +11,8 @@ shinyServer(function(input, output) {
         main_map
     })
 
-    countryName <- reactive(input$navbar)
+    # countryName <- reactive(input$navbar)
+    countryName <- "India"
     themeName <- reactive(input$theme_selector)
     popName <- reactive(input$pop_selector)
     pm25_rank_order <- reactive(input$select_pm25_rank_order)
