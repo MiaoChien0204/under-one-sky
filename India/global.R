@@ -28,6 +28,10 @@ COUNTRY_MAP_VAR = list(
   "India" = list(
     view = list(lng = 78, lat = 22, zoom = 5.1),
     bound = list(lng1=102, lat1=40, lng2=53, lat2=1)
+  ),
+  "Malaysia" = list(
+    view = list(lng = 110, lat = 4, zoom = 6),
+    bound = list(lng1=97, lat1=10, lng2=122, lat2=-3)
   )
 )
 
