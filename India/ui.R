@@ -9,15 +9,15 @@ navbarPage(
     collapsible = TRUE, #tab panels collapse into menu in small screens
     header = tags$head(
         tags$link(rel = "stylesheet", type = "text/css", href = cssFile),
+        # tags$head(includeScript(jsFile)),
         # HTML("<html lang='en'>"),
         # tags$link(rel="shortcut icon", href="favicon_scotpho.ico"), #Icon for browser tab
         #Including Google analytics
         #includeScript("google-analytics.js"),
         HTML("<base target='_blank'>")
     ),
-    
-        tabPanel(
-            title = "India",
+    tabPanel(
+            title = COUNTRY,
             fluidPage(class="main-page",
                         column(width = 7, class="left-control-panel col-md-7 col-sm-12",
                                ##### MAP CONTENT #####
@@ -96,31 +96,20 @@ navbarPage(
                                )
 
                       )
+        ),
+        navbarMenu(
+            title = "Select Country",
+            HTML(paste0('
+                 <a href="',DOMAIN, "Colombia", '" target="_blank">Colombia</a>
+                 <a href="',DOMAIN, "India", '" target="_blank">India</a>
+                 <a href="',DOMAIN, "Indonesia", '" target="_blank">Indonesia</a>
+                 <a href="',DOMAIN, "Malaysia", '" target="_blank">Malaysia</a>
+                 <a href="',DOMAIN, "Philippines", '" target="_blank">Philippines</a>
+                 <a href="',DOMAIN, "SouthAfrica", '" target="_blank">South Africa</a>
+                 <a href="',DOMAIN, "Thailand", '" target="_blank">Thailand</a>
+                 <a href="',DOMAIN, "Turkey", '" target="_blank">Turkey</a>
+            '))
         )
-        # ,
-        # tabPanel(
-        #     title = "Malaysia"
-        # ),
-        # tabPanel(
-        #     title = "Tailand"
-        # ),
-        # tabPanel(
-        #     title = "Philippines"
-        # ),
-        # tabPanel(
-        #     title = "Indonesia"
-        # ),
-        # tabPanel(
-        #     title = "Turkey"
-        # ),
-        # tabPanel(
-        #     title = "South Africa"
-        # ),
-        # tabPanel(
-        #     title = "Colombia"
-        # )
-    
-    
     
 )
 

@@ -1,3 +1,7 @@
+if(interactive()){
+  setwd("~/Dropbox/DataTalk/codeWork-datatalk/GreenPeace/APU/India")
+}
+
 suppressPackageStartupMessages({
   library(shiny)
   # library(shinyjs)
@@ -17,9 +21,11 @@ suppressPackageStartupMessages({
   # https://github.com/rstudio/leaflet/pull/692
 })
 
+DOMAIN = "https://apu-rxwnwfojzq-de.a.run.app/"
 COUNTRY = "India"
 
 cssFile = list.files("www")[grep(".css", list.files("www"))]
+jsFile = paste0("www/", list.files("www")[grep(".js", list.files("www"))])
 source("funcs.R")
 
 BASE_GROUPS = c("Voyager","WorldGray", "Positron", "StamenTerrainBackground",  "StamenTerrain", "WorldImagery")
