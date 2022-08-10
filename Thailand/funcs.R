@@ -10,31 +10,31 @@ getCountryNameAbbr = function(countryName, tolower=TRUE){
 
 
 getStationData = function(countryName){
-  readRDS(paste0("data/",countryName,"/station_data.rds"))  
+  readRDS(paste0("data/station_data.rds"))  
 }
 
 getPM25Data = function(countryName){
-  readRDS(paste0("data/",countryName,"/pm25_data.rds"))  
+  readRDS(paste0("data/pm25_data.rds"))  
 }
 
 getBoundary = function(countryName){
-  readRDS(paste0("data/",countryName,"/border.rds"))  
+  readRDS(paste0("data/border.rds"))  
 }
 
 getStation = function(countryName){
-  readRDS(paste0("data/",countryName,"/station.rds"))  
+  readRDS(paste0("data/station.rds"))  
 }
 
 getPM25Layer = function(countryName){
-  raster(paste0("data/",countryName,"/pm25.tif"))  
+  raster(paste0("data/pm25.tif"))  
 }
 
 getPopNameLayer = function(countryName, popName=c("pop", "pregs", "old", "child")){
-  raster(paste0("data/",countryName,"/pop_",popName,".tif"))  
+  raster(paste0("data/pop_",popName,".tif"))  
 }
 
 getPopNameLayerBrk = function(countryName, popName=c("pop", "pregs", "old", "child")){
-  readRDS(paste0("data/",countryName,"/pop_",popName,"_brk.rds"))
+  readRDS(paste0("data/pop_",popName,"_brk.rds"))
 }
 
 addMap_boundary = function(map, countryName){

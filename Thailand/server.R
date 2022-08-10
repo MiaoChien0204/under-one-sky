@@ -1,8 +1,3 @@
-if(interactive()){
-  setwd("~/Dropbox/DataTalk/codeWork-datatalk/GreenPeace/APU/India")  
-}
-
-
 library(shiny)
 source("funcs.R")
 

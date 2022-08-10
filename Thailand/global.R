@@ -1,3 +1,7 @@
+if(interactive()){
+  setwd("~/Dropbox/DataTalk/codeWork-datatalk/GreenPeace/APU/Thailand")
+}
+
 suppressPackageStartupMessages({
   library(shiny)
   # library(shinyjs)
@@ -17,9 +21,11 @@ suppressPackageStartupMessages({
   # https://github.com/rstudio/leaflet/pull/692
 })
 
-COUNTRY = "India"
+DOMAIN = "https://apu-rxwnwfojzq-de.a.run.app/"
+COUNTRY = "Thailand"
 
 cssFile = list.files("www")[grep(".css", list.files("www"))]
+jsFile = paste0("www/", list.files("www")[grep(".js", list.files("www"))])
 source("funcs.R")
 
 BASE_GROUPS = c("Voyager","WorldGray", "Positron", "StamenTerrainBackground",  "StamenTerrain", "WorldImagery")
@@ -32,6 +38,11 @@ COUNTRY_MAP_VAR = list(
   "Malaysia" = list(
     view = list(lng = 110, lat = 4, zoom = 6),
     bound = list(lng1=97, lat1=10, lng2=122, lat2=-3)
+  ),
+  "Thailand" = list(
+    view = list(lng = 101, lat = 14, zoom = 5.5),
+    bound = list(lng1=91, lat1=4, lng2=110, lat2=21)
+    
   )
 )
 
