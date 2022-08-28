@@ -2,10 +2,44 @@ body{
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  font-family: Raleway, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.container-fluid{
+  margin: 0px;
+  padding: 0px;
 }
 
 .navbar-static-top{
     margin-bottom: 0px;
+}
+
+.navbar {
+  z-index: 10;
+}
+
+.navbar-header p{
+  display: none;
+}
+
+.nav-logo{
+  position: absolute;
+  top: 18px;
+  right: 150px;
+/*   right: 50px; */
+  z-index: 50;
+}
+
+.nav-icon {
+  position: absolute;
+  top: 10px;
+  right: 50px;
+/*   right: calc(8vw + 70px ); */
+  z-index: 50;
+}
+
+#btn_disclaimer{
+  width: 44px;
 }
 
 .container-fluid:nth-child(2){
@@ -33,8 +67,13 @@ body{
   height: 95vh;
 }
 
+.right-control-panel .row{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 #main_map {
-  height: 95vh !important;
+  height: 90vh !important;
 }
 
 .rank20_selector .shiny-input-container {
@@ -63,8 +102,18 @@ body{
 	display: none !important;
 }
 
-
 .shiny-output-error{
   display: none;
 }
 
+#theme_selector button.btn.radiobtn.btn-default{
+  font-size: 1rem !important;
+}
+
+#ui_desc h3{
+  margin-top: 5px;
+}
+
+#ui_desc p{
+  color: #888;
+}

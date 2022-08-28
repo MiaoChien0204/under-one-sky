@@ -27,6 +27,8 @@ BOUND_LV = 1
 ID = paste0("ID_",BOUND_LV)
 NAME = paste0("NAME_",BOUND_LV)
 
+TITLE = paste0('Different air under one sky (', COUNTRY ,')' )
+
 cssFile = list.files("www")[grep(".css", list.files("www"))]
 jsFile = paste0("www/", list.files("www")[grep(".js", list.files("www"))])
 source("funcs.R")

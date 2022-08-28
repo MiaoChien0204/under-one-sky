@@ -3,7 +3,7 @@ library(shiny)
 source("funcs.R")
 
 # Define server logic required to draw a histogram
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 
 
 # MAP ---------------------------------------------------------------------
@@ -67,13 +67,13 @@ shinyServer(function(input, output) {
           if(themeName=="AQ Station"){
             desc = wellPanel(
               h3("AQ station accessibility analysis"),
-              p("Identify the proportion of people who have access to locally relevant AQ data. Comparison is made between the proximity of AQ stations to people of different population groups. The proportions of the populations who live within 5 km (green), 10 km (orange) ,25 km (red) and over 25 km (purple) of AQ stations are provided.")
+              p("Identify the proportion of people who have access to locally relevant AQ data. Comparison is made between the proximity of AQ stations to people of different population groups. The proportions of the populations who live within 5 km (green), 10 km (orange), 25 km (red) and over 25 km (purple) of AQ stations are provided.")
             )
           }
           if(themeName=="PM2.5"){
             desc = wellPanel(
               h3("PM2.5 exposure analysis"),
-              p("Identify the proportion of people who are exposed to various concentration level. The current WHO air quality guideline for annual mean concentrations of PM2.5 is 5 µg/m3. Exceedance of this guideline is associated with important risks to public health. Four levels are categorized  1.meet the WHO guideline (Green), 2. exceed no more than five times(orange),  3. exceed between five and ten times (red),  4. exceed more than ten times(purple).")
+              p("Identify the proportion of people who are exposed to various concentration level. The current WHO air quality guideline for annual mean concentrations of PM2.5 is 5 µg/m3. Exceedance of this guideline is associated with important risks to public health. Four levels are categorized:  1.meet the WHO guideline (green), 2. exceed no more than five times (orange),  3. exceed between five and ten times (red),  4. exceed more than ten times (purple).")
             )
           }
           return(desc)
@@ -246,15 +246,25 @@ shinyServer(function(input, output) {
         })  
         
       })
-      
-      
-      
-      
-      
-      
+
     })
     
     
+    #################### DIALOG BOX ######################
+    
+    observeEvent(input$btn_disclaimer, {
+      showModal(modalDialog(
+        "Greater insight can be made in larger areas. Results for areas with a small number of population data points should be treated with caution.",
+        size = "s",
+        easyClose = TRUE,
+      ))
+    })
+    
+    
+    ################### TITLE ################
+    observe({
+      session$sendCustomMessage("changetitle", TITLE)
+    })
 
     
 })
