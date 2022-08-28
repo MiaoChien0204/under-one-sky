@@ -13,7 +13,7 @@ suppressPackageStartupMessages({
   # library(leaflet.extras)
   library(rgdal)
   library(shinyWidgets)
-  library(sf)
+  # library(sf)
   library(raster)
   library(plotly)
   library(DT)
@@ -22,8 +22,8 @@ suppressPackageStartupMessages({
 })
 
 DOMAIN = "https://apu-rxwnwfojzq-de.a.run.app/"
-COUNTRY = countryName = "Malaysia"
-BOUND_LV = 2
+COUNTRY = countryName = "Indonesia"
+BOUND_LV = 1
 ID = paste0("ID_",BOUND_LV)
 NAME = paste0("NAME_",BOUND_LV)
 
@@ -74,8 +74,14 @@ LAYER_BOUNDARY_NAME = "Admin Boundary"
 LAYER_THEME_NAME = ""
 LAYER_POP_NAME = "Selected Group Pop"
 
-main_map =
-  leaflet(options = leafletOptions(minZoom = COUNTRY_MAP_VAR[[COUNTRY]]$view$zoom)) %>%
+if(COUNTRY=="India"){
+  main_map = leaflet(options = leafletOptions(minZoom = COUNTRY_MAP_VAR[[COUNTRY]]$view$zoom, maxZoom = 7))   
+}else{
+  main_map = leaflet(options = leafletOptions(minZoom = COUNTRY_MAP_VAR[[COUNTRY]]$view$zoom))   
+}
+
+
+main_map %<>%
   addScaleBar(position = "topleft") %>% 
   addProviderTiles(providers$CartoDB.PositronNoLabels, group = BASE_GROUPS[1]) %>%
   addProviderTiles(providers$Esri.WorldImagery, group = BASE_GROUPS[2]) %>%

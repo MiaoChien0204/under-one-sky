@@ -68,65 +68,68 @@ COUNTRY_MAP_VAR = list(
   )
 )
 
-BASE_GROUPS = c("Voyager", "Positron","StamenTerrainBackground","WorldImagery")
+BASE_GROUPS = c("Positron","WorldImagery")
 
 LAYER_BOUNDARY_NAME = "Admin Boundary"
 LAYER_THEME_NAME = ""
 LAYER_POP_NAME = "Selected Group Pop"
 
-main_map =
-  leaflet(options = leafletOptions(minZoom = COUNTRY_MAP_VAR[[COUNTRY]]$view$zoom)) %>%
+if(COUNTRY=="India"){
+  main_map = leaflet(options = leafletOptions(minZoom = COUNTRY_MAP_VAR[[COUNTRY]]$view$zoom, maxZoom = 7))   
+}else{
+  main_map = leaflet(options = leafletOptions(minZoom = COUNTRY_MAP_VAR[[COUNTRY]]$view$zoom))   
+}
+
+
+main_map %<>%
   addScaleBar(position = "topleft") %>% 
-  addProviderTiles(providers$CartoDB.VoyagerNoLabels, group = BASE_GROUPS[1]) %>%
-  addProviderTiles(providers$CartoDB.PositronNoLabels, group = BASE_GROUPS[2]) %>%
-  addProviderTiles(providers$Stamen.TerrainBackground, group = BASE_GROUPS[3]) %>%
-  addProviderTiles(providers$Esri.WorldImagery, group = BASE_GROUPS[4]) %>%
-  
+  addProviderTiles(providers$CartoDB.PositronNoLabels, group = BASE_GROUPS[1]) %>%
+  addProviderTiles(providers$Esri.WorldImagery, group = BASE_GROUPS[2]) %>%
   setView(lng=COUNTRY_MAP_VAR[[COUNTRY]]$view$lng, lat=COUNTRY_MAP_VAR[[COUNTRY]]$view$lat, zoom=COUNTRY_MAP_VAR[[COUNTRY]]$view$zoom) %>%
   setMaxBounds(lng1=COUNTRY_MAP_VAR[[COUNTRY]]$bound$lng1, lat1=COUNTRY_MAP_VAR[[COUNTRY]]$bound$lat1, lng2=COUNTRY_MAP_VAR[[COUNTRY]]$bound$lng2, lat2=COUNTRY_MAP_VAR[[COUNTRY]]$bound$lat2)
 
 
 COLOR_BRK_data = c("#9CD84E", "#FAA238", "#DF3233", "#7D3C98")
 COLOR_BRK_map = c("#9CD84E",  #green
-              "#fb9946", "#fa8623", "#f47405", "#d16304", #orange
-              "#e8585b", "#db1e21", "#bc191c", "#9d1517", "#5e0c0e",   #red
-              "#7D3C98" #purple
-              )
+                  "#fb9946", "#fa8623", "#f47405", "#d16304", #orange
+                  "#e8585b", "#db1e21", "#bc191c", "#9d1517", "#5e0c0e",   #red
+                  "#7D3C98" #purple
+)
 
 COLOR_BRK_map_india = c(COLOR_BRK_map, 
-                  "#9e02b8", "#590168", "#300038"
-                  )
+                        "#9e02b8", "#590168", "#300038"
+)
 
 
 theme_break = tibble(
   "AQ Station" = c("group_a_prec" ="5 km↓",  
-                  "group_ab_prec" = "5-10 km", 
-                  "group_bc_prec" = "10-25 km", 
-                  "group_c_prec" = "25 km↑"),
+                   "group_ab_prec" = "5-10 km", 
+                   "group_bc_prec" = "10-25 km", 
+                   "group_c_prec" = "25 km↑"),
   "PM2.5" = c("group_a_prec" ="5 μg/m3↓",  
-             "group_ab_prec" = "5-25 μg/m3", 
-             "group_bc_prec" = "25-50 μg/m3", 
-             "group_c_prec" = "50 μg/m3↑")
+              "group_ab_prec" = "5-25 μg/m3", 
+              "group_bc_prec" = "25-50 μg/m3", 
+              "group_c_prec" = "50 μg/m3↑")
   
 )
 
 THEME_BREAK_TABLE = 
   tibble(
-       theme = "AQ Station", 
-       var = c("group_all", 
-               "group_A", "group_B", "group_C",
-               "group_A_prec", "group_B_prec", "group_C_prec",
-               "group_a_num",  "group_ab_num", "group_bc_num", "group_c_num",
-               "group_a_prec", "group_ab_prec", "group_bc_prec", "group_c_prec"),
-       varName = c("group pop #",
-                 "# <5 km", "# <10 km", "# <25 km",
-                 "% <5 km", "% <10 km", "% <25 km", 
-                 "# <5 km", "# 5-10 km", "# 10-25 km", "# >25 km",  
-                 "% <5 km", "% 5-10 km", "% 10-25 km", "% >25 km"  
-                 )
-       ) %>% 
+    theme = "AQ Station", 
+    var = c("group_all", 
+            "group_A", "group_B", "group_C",
+            "group_A_prec", "group_B_prec", "group_C_prec",
+            "group_a_num",  "group_ab_num", "group_bc_num", "group_c_num",
+            "group_a_prec", "group_ab_prec", "group_bc_prec", "group_c_prec"),
+    varName = c("group pop #",
+                "# <5 km", "# <10 km", "# <25 km",
+                "% <5 km", "% <10 km", "% <25 km", 
+                "# <5 km", "# 5-10 km", "# 10-25 km", "# >25 km",  
+                "% <5 km", "% 5-10 km", "% 10-25 km", "% >25 km"  
+    )
+  ) %>% 
   bind_rows(
-  tibble(
+    tibble(
       theme = "PM2.5",
       var = c("group_all", 
               "group_A", "group_B", "group_C",
@@ -134,10 +137,10 @@ THEME_BREAK_TABLE =
               "group_a_num",  "group_ab_num", "group_bc_num", "group_c_num",
               "group_a_prec", "group_ab_prec", "group_bc_prec", "group_c_prec"),
       varName = c("group pop #",
-                "# >5 μg/m3", "# >25 μg/m3", "# >50 μg/m3",
-                "% >5 μg/m3", "% >25 μg/m3", "% >50 μg/m3", 
-                "# <5 μg/m3", "# 5-25 μg/m3", "# 25-50 μg/m3", "# >50 μg/m3↑",  
-                "% <5 μg/m3", "% 5-25 μg/m3", "% 25-50 μg/m3", "% >50 μg/m3↑"  
+                  "# >5 μg/m3", "# >25 μg/m3", "# >50 μg/m3",
+                  "% >5 μg/m3", "% >25 μg/m3", "% >50 μg/m3", 
+                  "# <5 μg/m3", "# 5-25 μg/m3", "# 25-50 μg/m3", "# >50 μg/m3↑",  
+                  "% <5 μg/m3", "% 5-25 μg/m3", "% 25-50 μg/m3", "% >50 μg/m3↑"  
       )
     )
   )

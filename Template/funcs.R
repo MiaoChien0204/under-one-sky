@@ -170,17 +170,17 @@ addMap_boundary = function(map, countryName){
       layerId = ~get(ID),
       
       ###### no hide ######
-      weight = 1,
-      opacity = 1,
-      color = "#CDCDCD",
-      dashArray = "3",
-      fillOpacity = 0,
+      # weight = 1,
+      # opacity = 1,
+      # color = "#CDCDCD",
+      # dashArray = "3",
+      # fillOpacity = 0,
       
       ###### hide ######
-      # stroke = FALSE,
-      # fill = TRUE,
-      # fillOpacity = 0,
-      # dashArray = "3",
+      stroke = FALSE,
+      fill = TRUE,
+      fillOpacity = 0,
+      dashArray = "3",
       highlightOptions = highlightOptions(
         weight = 5,
         color = "red",
@@ -243,22 +243,29 @@ addMap_popName = function(map, countryName, popName){
   country_pop_layer_name = LAYER_POP_NAME
   brks = getPopNameLayerBrk(countryName, popName)
   
+  labels = c(
+    paste0(brks[1], " - ", brks[2]),
+    paste0(brks[2], " - ", brks[3]),
+    paste0(brks[3], " - ", brks[4]),
+    paste0(brks[4], " - ", brks[5]),
+    paste0(brks[5], " - ", brks[6]),
+    paste0("> ", brks[6])
+             )
+  
   if(popName=="all"){
     layerTitle = paste0(countryName, " All Population")
   }
   if(popName=="old"){
-    layerTitle = paste0(countryName, " Elderlies (65+)")
+    layerTitle = paste0(countryName, " Older adults (over 65)")
   }
   if(popName=="pregs"){
-    layerTitle = paste0(countryName, " Pregnant Women")
+    layerTitle = paste0(countryName, " Pregnant people")
   }
   if(popName=="child"){
-    layerTitle = paste0(countryName, " Infants (0-4)")
+    layerTitle = paste0(countryName, " Infants (under 5)")
   }
   
-  
-  
-  pal <- colorBin(palette = c("#f0f0f0", "black"), bins = brks, pretty = TRUE, 
+  pal <- colorBin(palette = c('#fafafa','#c9c9c9','#989898','#676767','#363636','#050505'), bins = brks, pretty = TRUE,
                   domain=brks, na.color = "transparent")
   
   
@@ -267,7 +274,7 @@ addMap_popName = function(map, countryName, popName){
     addRasterImage(popRaster, colors = pal, opacity = 0.4, group = country_pop_layer_name , options = tileOptions(pane = "pop")
     ) %>%
     addLegend(pal=pal, values = brks, title = layerTitle, position="bottomright", group = country_pop_layer_name, layerId = country_pop_layer_name
-              # ,labFormat = function(type, cuts, p) {  paste0(labels) }
+              ,labFormat = function(type, cuts, p) {  paste0(labels) }
     )
   
   
@@ -295,9 +302,37 @@ addMap_pm25 = function(map, countryName){
   if(countryName=="India"){
     brks = c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 75, 100, Inf)
     pal = colorBin(palette = COLOR_BRK_map_india, bins = brks, domain = brks, na.color="transparent")
+    labels = c(
+      paste0(brks[1], " - ", brks[2]),
+      paste0(brks[2], " - ", brks[3]),
+      paste0(brks[3], " - ", brks[4]),
+      paste0(brks[4], " - ", brks[5]),
+      paste0(brks[5], " - ", brks[6]),
+      paste0(brks[6], " - ", brks[7]),
+      paste0(brks[7], " - ", brks[8]),
+      paste0(brks[8], " - ", brks[9]),
+      paste0(brks[9], " - ", brks[10]),
+      paste0(brks[10], " - ", brks[11]),
+      paste0(brks[11], " - ", brks[12]),
+      paste0(brks[12], " - ", brks[13]),
+      paste0("> ", brks[13])
+    )
   }else{
     brks = c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, Inf)
     pal = colorBin(palette = COLOR_BRK_map, bins = brks, domain = brks, na.color="transparent")  
+    labels = c(
+      paste0(brks[1], " - ", brks[2]),
+      paste0(brks[2], " - ", brks[3]),
+      paste0(brks[3], " - ", brks[4]),
+      paste0(brks[4], " - ", brks[5]),
+      paste0(brks[5], " - ", brks[6]),
+      paste0(brks[6], " - ", brks[7]),
+      paste0(brks[7], " - ", brks[8]),
+      paste0(brks[8], " - ", brks[9]),
+      paste0(brks[9], " - ", brks[10]),
+      paste0(brks[10], " - ", brks[11]),
+      paste0("> ", brks[11])
+      )
   }
   
   
@@ -305,7 +340,12 @@ addMap_pm25 = function(map, countryName){
     # main_map %>%
     addRasterImage(pm25, colors = pal, opacity = 0.6, group = layerName #, options = tileOptions(pane = "theme_pm25")
     ) %>% 
-    addLegend(pal=pal, values = brks, title = "PM2.5 concentration", position="bottomleft", layerId = layerId)
+    addLegend(pal=pal, values = brks, 
+              
+              title = "PM<sub>2.5</sub> (μg/m<sup>3</sup>)",
+              position="bottomleft", layerId = layerId
+              ,labFormat = function(type, cuts, p) {  paste0(labels) }
+              )
 }
 
 
@@ -334,7 +374,8 @@ addMap_theme = function(map, themeName, countryName){
 
 
 ### rank
-
+# themeName = "PM2.5"
+# popName = "all"
 getRankPlotData = function(countryName, themeName, popName){
   if(themeName=="AQ Station"){
     d = getStationData(countryName)
@@ -343,53 +384,62 @@ getRankPlotData = function(countryName, themeName, popName){
     d = getPM25Data(countryName)
     fieldName = "pm25"
   }
-  
-  
+
+
   field_selector = paste0(fieldName, "_", popName)
   group_all = paste0(fieldName, "_", popName, "_all")
   brks = c("A", "B", "C")
   group_brks = paste0("group", "_", brks)
-  
+
   # 暴力改名法，小心不能出錯
   # 只成立在 Station 和 PM2.5 的 break point 組數一樣時
   d %<>% dplyr::select(NAME, ID, group_all, starts_with(field_selector))
   names(d) <- c(NAME, ID, "group_all", group_brks)
-  
+
   d %<>% mutate(across(group_brks, ~round(.x/group_all, 6), .names = "{.col}_prec"))
-  
-  
+
+
   if(themeName=="AQ Station"){
     d %<>% mutate(
-      group_a_prec = group_A_prec, 
+      group_a_prec = group_A_prec,
       group_ab_prec = group_B_prec-group_A_prec,
       group_bc_prec = group_C_prec-group_B_prec,
       group_c_prec = 1-group_C_prec
     )
-    
+
   }
   if(themeName=="PM2.5"){
+
+    #### 0824 updated ####
+    if(themeName=="PM2.5" & countryName %in% c("Malaysia", "Philippines", "Thailand", "Indonesia", "Turkey")){
+      message("FIX group_a_prec PROBLEM!!!")
+      d %<>% mutate(
+        group_a_prec = 0,
+        group_ab_prec = (1-group_A_prec)+group_A_prec-group_B_prec,
+        group_bc_prec = group_B_prec-group_C_prec,
+        group_c_prec = group_C_prec
+      )
+    }
+
     d %<>% mutate(
       group_a_prec = 1-group_A_prec,
-      group_ab_prec = group_A_prec-group_B_prec, 
+      group_ab_prec = group_A_prec-group_B_prec,
       group_bc_prec = group_B_prec-group_C_prec,
       group_c_prec = group_C_prec
     )
   }
-  
-  
-  d %>% mutate(across(c("group_a_prec", "group_ab_prec", "group_bc_prec", "group_c_prec"), ~round(.x * group_all, 0), .names ="{.col}_num")) %>% 
-    rename_if(grepl("_num", names(.)), ~gsub("_prec","",.x)) %>% 
+
+
+  d %<>% mutate(across(c("group_a_prec", "group_ab_prec", "group_bc_prec", "group_c_prec"), ~round(.x * group_all, 0), .names ="{.col}_num")) %>%
+    rename_if(grepl("_num", names(.)), ~gsub("_prec","",.x)) %>%
     dplyr::select(NAME, ID, THEME_BREAK_TABLE %>% dplyr::filter(theme==themeName) %>% pull(var)) %>%  #reorder the columns
-    replace(is.na(.), 0) 
-  
-  
+    replace(is.na(.), 0)
+
+  return(d)
 }
 
 
-# d1 = getRankPlotData(countryName, themeName="PM2.5", popName="all")
 # rankPlotData = getRankPlotData(countryName, themeName="PM2.5", popName="all")
-# AQ: group_a_prec, head(100)
-
 # orderfield = "group_c_prec"
 # themeName = "PM2.5"
 drawStackedChart = function(rankPlotData, orderfield, themeName){
@@ -423,9 +473,11 @@ drawStackedChart = function(rankPlotData, orderfield, themeName){
       desc(group_c_prec)
     )
   }
+  ###################
+  # d = rankPlotData %>% arrange(desc(group_all))
+  ###################
   
-  
-  d %<>% head(30) %>% 
+  d %<>% head(15) %>% 
     mutate(across(ends_with("prec"), ~.x*100)) %>% 
     mutate(across(ends_with("prec"), ~round(.x,2))) %>% 
     rename(name = !!NAME)
@@ -459,7 +511,9 @@ drawStackedChart = function(rankPlotData, orderfield, themeName){
               marker = list(color = COLOR_BRK_data[4])) %>% 
     layout(barmode = 'stack', showlegend = FALSE,
            xaxis = list(title = "%"),
-           yaxis = list(title = "", categoryorder = "array", categoryarray = rev(d$name))
+           yaxis = list(title = "", categoryorder = "array", categoryarray = rev(d$name)
+                        ,ticksuffix = "  "
+                        )
     )
   
   
@@ -490,13 +544,16 @@ drawStackedChart = function(rankPlotData, orderfield, themeName){
               marker = list(color = COLOR_BRK_data[4])) %>% 
     layout(barmode = 'stack', showlegend = FALSE,
            xaxis = list(title = "%"),
-           yaxis = list(title = "", categoryorder = "array", categoryarray = rev(d$name))
+           yaxis = list(title = "", categoryorder = "array", categoryarray = rev(d$name)
+                        ,ticksuffix = "  "
+                        )
     )
   
-  subplot(p_avg, p, nrows=2, shareX = TRUE, heights = c(0.05, 0.95),
+  subplot(p_avg, p, nrows=2, shareX = TRUE, heights = c(0.1, 0.9),
           margin = 0.005
-  )
+  ) %>% config(displayModeBar = FALSE)
   
+
 }
 
 

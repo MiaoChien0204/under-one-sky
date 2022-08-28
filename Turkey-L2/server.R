@@ -16,7 +16,7 @@ shinyServer(function(input, output) {
     themeName <- reactive(input$theme_selector)
     popName <- reactive(input$pop_selector)
     pm25_rank_order <- reactive(input$select_pm25_rank_order)
-    tabs_viewType <- reactive(input$tabs_viewType)
+    # tabs_viewType <- reactive(input$tabs_viewType)
     tabs_Ranking_viewType <- reactive(input$tabs_Ranking_viewType)
     # brk_aq <- reactive(input$brk_selector_aq)
     # brk_pm <- reactive(input$brk_selector_pm)
@@ -35,7 +35,7 @@ shinyServer(function(input, output) {
     leafletProxy("main_map") %>%
       addMap_boundary(countryName = COUNTRY) %>% 
       addMapPane("selected city", zIndex = 480) %>% 
-      addMapPane("boundary", zIndex=450) %>% # 最上
+      addMapPane("boundary", zIndex=470) %>% # 最上
       addMapPane("theme_pm25", zIndex=430) %>% # 最上
       addMapPane("theme_AQstation", zIndex = 420) %>% #中間 
       addMapPane("pop", zIndex=410) %>% #最下
@@ -62,21 +62,33 @@ shinyServer(function(input, output) {
                 options = layersControlOptions(collapsed = TRUE)
             ) 
 
+        output$ui_desc <- renderUI({
+          
+          if(themeName=="AQ Station"){
+            desc = wellPanel(
+              h3("AQ station accessibility analysis"),
+              p("Identify the proportion of people who have access to locally relevant AQ data. Comparison is made between the proximity of AQ stations to people of different population groups. The proportions of the populations who live within 5 km (green), 10 km (orange) ,25 km (red) and over 25 km (purple) of AQ stations are provided.")
+            )
+          }
+          if(themeName=="PM2.5"){
+            desc = wellPanel(
+              h3("PM2.5 exposure analysis"),
+              p("Identify the proportion of people who are exposed to various concentration level. The current WHO air quality guideline for annual mean concentrations of PM2.5 is 5 µg/m3. Exceedance of this guideline is associated with important risks to public health. Four levels are categorized  1.meet the WHO guideline (Green), 2. exceed no more than five times(orange),  3. exceed between five and ten times (red),  4. exceed more than ten times(purple).")
+            )
+          }
+          return(desc)
+        })
         
     })
     
     observeEvent(popName(), {
       # countryName = countryName()
       popName = popName()
-      
-      country_pop_layer_name = paste0(countryName, " Selected Group Population")
-      
-      
+
       leafletProxy("main_map") %>%
-        clearGroup(country_pop_layer_name) %>% 
+        clearGroup(LAYER_POP_NAME) %>% 
         # removeControl() %>% 
         addMap_popName(countryName = countryName, popName = popName) 
-      
       
     })
     
@@ -114,64 +126,65 @@ shinyServer(function(input, output) {
         }
       })
       
-      output$rank_table <- DT::renderDataTable({
-        d = getRankTable(rankPlotData, themeName) %>% dplyr::select(-ID)
-        field_format_comma = names(d) %>% .[grep("#",.)]
-        field_format_perc = names(d) %>% .[grep("%",.)]
-        
-        DT::datatable(d, 
-                      option = list(
-                        autoWidth = TRUE,
-                        select = list(style = 'os', items = 'row'),
-                        deferRender = TRUE, scrollY = "40vh", scrollX=400 , scroller = TRUE,
-                        fixedColumns = list(leftColumns = 1)
-                      ),
-                      rownames = FALSE,
-                      extensions = c("Scroller", "Select", "FixedColumns"),
-                      selection = 'none'
-          ) %>% 
-          formatCurrency(columns = field_format_comma, currency = "", digits=0, interval = 3, mark = ",") %>% 
-          formatPercentage(columns = field_format_perc, digits=2)
-      }, server = FALSE
-      )
+      # output$rank_table <- DT::renderDataTable({
+      #   d = getRankTable(rankPlotData, themeName) %>% dplyr::select(-ID)
+      #   field_format_comma = names(d) %>% .[grep("#",.)]
+      #   field_format_perc = names(d) %>% .[grep("%",.)]
+      #   
+      #   DT::datatable(d, 
+      #                 option = list(
+      #                   autoWidth = TRUE,
+      #                   select = list(style = 'os', items = 'row'),
+      #                   deferRender = TRUE, 
+      #                   scrollY = "40vh", scrollX=500 , scroller = TRUE,
+      #                   fixedColumns = list(leftColumns = 1)
+      #                 ),
+      #                 rownames = FALSE,
+      #                 extensions = c("Scroller", "Select", "FixedColumns"),
+      #                 selection = 'none'
+      #     ) %>% 
+      #     formatCurrency(columns = field_format_comma, currency = "", digits=0, interval = 3, mark = ",") %>% 
+      #     formatPercentage(columns = field_format_perc, digits=2)
+      # }, server = FALSE
+      # )
       
           ####### Select City in Table #######
-          observeEvent(input$rank_table_rows_selected, {
-            rowID = input$rank_table_rows_selected
-            message(rowID)
-            
-            if(!is.null(row)){
-              bound_id = getRankTable(rankPlotData, themeName) %>% .[rowID,] %>% pull(ID)  
-              message(bound_id)
-              
-              leafletProxy("main_map") %>%
-                cleanMap_selectCity() %>%
-                addMap_selectCity(countryName, bound_id)
-            }
-            
-          })
+          # observeEvent(input$rank_table_rows_selected, {
+          #   rowID = input$rank_table_rows_selected
+          #   message(rowID)
+          #   
+          #   if(!is.null(row)){
+          #     bound_id = getRankTable(rankPlotData, themeName) %>% .[rowID,] %>% pull(ID)  
+          #     message(bound_id)
+          #     
+          #     leafletProxy("main_map") %>%
+          #       cleanMap_selectCity() %>%
+          #       addMap_selectCity(countryName, bound_id)
+          #   }
+          #   
+          # })
       
     })
     
-    observeEvent(input$btn_cleanMap, {
-      leafletProxy("main_map") %>%
-        cleanMap_selectCity()
-    })
+    # observeEvent(input$btn_cleanMap, {
+    #   leafletProxy("main_map") %>%
+    #     cleanMap_selectCity()
+    # })
     
-    observeEvent({
-      tabs_viewType()
-      tabs_Ranking_viewType()
-      1
-    }, {
-      leafletProxy("main_map") %>%
-        cleanMap_selectCity()  
-      
-      if(tabs_Ranking_viewType()!="Table"){
-        leafletProxy("main_map") %>%
-          cleanMap_selectCity()  
-      }
-      
-    })
+    # observeEvent({
+    #   tabs_viewType()
+    #   tabs_Ranking_viewType()
+    #   1
+    # }, {
+    #   leafletProxy("main_map") %>%
+    #     cleanMap_selectCity()  
+    #   
+    #   if(tabs_Ranking_viewType()!="Table"){
+    #     leafletProxy("main_map") %>%
+    #       cleanMap_selectCity()  
+    #   }
+    #   
+    # })
     
     
     
@@ -212,7 +225,7 @@ shinyServer(function(input, output) {
           message("NO RESULT!!")
           
         output$ui_city_situaion <- renderUI({
-          h3("Please select city from the map")
+          h3("Please select area from the map")
         })  
         
       })

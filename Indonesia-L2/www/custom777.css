@@ -50,12 +50,13 @@ body{
   box-shadow: none !important;
   border: none !important;
   background: transparent !important;
-  -webkit-text-stroke: 1px #fff100;
+  -webkit-text-stroke: 0.6px #fff100;
  
 }
 
 .leaflet-tooltip h4{
   color: red !important;
+  font-weight: 900;
 }
 
 .leaflet-tooltip-left:before, .leaflet-tooltip-right:before{
