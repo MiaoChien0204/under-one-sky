@@ -3,7 +3,6 @@
 - The APP builds up as a Docker image
 - Upload the docker image to Google Cloud Platform (GCP), and the docker container is running by Cloud Run.
 - Recommended Cloud Run Container: 2 CPU, 8G ram
-- 
 
 
 
