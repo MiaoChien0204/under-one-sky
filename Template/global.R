@@ -22,7 +22,7 @@ suppressPackageStartupMessages({
   # https://github.com/rstudio/leaflet/pull/692
 })
 
-DOMAIN = "https://apu-rxwnwfojzq-de.a.run.app/"
+
 COUNTRY = countryName = "Thailand"
 BOUND_LV = 1
 ID = paste0("ID_",BOUND_LV)

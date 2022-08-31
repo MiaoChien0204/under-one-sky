@@ -26,7 +26,8 @@ RUN R -e "devtools::install_github('rstudio/leaflet', ref='joe/feature/raster-op
 
 # Copy configuration files into the Docker image
 COPY shiny-server.conf  /etc/shiny-server/shiny-server.conf
-# COPY APU-dashboard /srv/shiny-server/APU-dashboard
+
+COPY Template /srv/shiny-server/Template
 
 COPY Colombia-L1 /srv/shiny-server/Colombia
 COPY India-L1 /srv/shiny-server/India
@@ -37,14 +38,11 @@ COPY SouthAfrica-L1 /srv/shiny-server/SouthAfrica
 COPY Thailand-L1 /srv/shiny-server/Thailand
 COPY Turkey-L1 /srv/shiny-server/Turkey
 
-
 RUN sudo chown -R shiny:shiny /srv/shiny-server
 RUN sudo rm -r -f /srv/shiny-server/01_hello/ /srv/shiny-server/02_text/ /srv/shiny-server/03_reactivity/ /srv/shiny-server/04_mpg/ /srv/shiny-server/05_sliders/ /srv/shiny-server/06_tabsets/ /srv/shiny-server/07_widgets/ /srv/shiny-server/08_html/ /srv/shiny-server/09_upload/ /srv/shiny-server/10_download/ /srv/shiny-server/11_timer/ /srv/shiny-server/sample-apps
 
 RUN rm /srv/shiny-server/index.html
 COPY index.html /srv/shiny-server/index.html
-
-
 
 # Make the ShinyApp available at port 80
 EXPOSE 80

@@ -146,16 +146,17 @@ shinyUI(
             ),
             navbarMenu(
                 title = "Select country",
-                HTML(paste0('
-                 <a href="',DOMAIN, "Colombia-L1/", '" target="_self">Colombia</a>
-                 <a href="',DOMAIN, "India-L1/", '" target="_self">India</a>
-                 <a href="',DOMAIN, "Indonesia-L1/", '" target="_self">Indonesia</a>
-                 <a href="',DOMAIN, "Malaysia/", '" target="_self">Malaysia</a>
-                 <a href="',DOMAIN, "Philippines-L1/", '" target="_self">Philippines</a>
-                 <a href="',DOMAIN, "SouthAfrica-L1/", '" target="_self">South Africa</a>
-                 <a href="',DOMAIN, "Thailand-L1/", '" target="_self">Thailand</a>
-                 <a href="',DOMAIN, "Turkey-L1/", '" target="_self">Turkey</a>
-            '))
+                HTML(
+                '<a href="../Colombia/" target="_self">Colombia</a>
+                 <a href="../India/" target="_self">India</a>
+                 <a href="../Indonesia/" target="_self">Indonesia</a>
+                 <a href="../Malaysia/" target="_self">Malaysia</a>
+                 <a href="../Philippines/" target="_self">Philippines</a>
+                 <a href="../SouthAfrica/" target="_self">South Africa</a>
+                 <a href="../Thailand/" target="_self">Thailand</a>
+                 <a href="../Turkey/" target="_self">Turkey</a>
+                ')
+                
             )
             
         )
