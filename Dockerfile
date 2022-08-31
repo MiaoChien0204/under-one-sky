@@ -27,23 +27,15 @@ RUN R -e "devtools::install_github('rstudio/leaflet', ref='joe/feature/raster-op
 # Copy configuration files into the Docker image
 COPY shiny-server.conf  /etc/shiny-server/shiny-server.conf
 # COPY APU-dashboard /srv/shiny-server/APU-dashboard
-COPY Colombia-L1 /srv/shiny-server/Colombia-L1
-COPY India-L1 /srv/shiny-server/India-L1
-COPY Indonesia-L1 /srv/shiny-server/Indonesia-L1
-COPY Malaysia-L1 /srv/shiny-server/Malaysia-L1
-COPY Philippines-L1 /srv/shiny-server/Philippines-L1
-COPY SouthAfrica-L1 /srv/shiny-server/SouthAfrica-L1
-COPY Thailand-L1 /srv/shiny-server/Thailand-L1
-COPY Turkey-L1 /srv/shiny-server/Turkey-L1
 
-COPY Colombia-L2 /srv/shiny-server/Colombia
-COPY India-L2 /srv/shiny-server/India
-COPY Indonesia-L2 /srv/shiny-server/Indonesia
+COPY Colombia-L1 /srv/shiny-server/Colombia
+COPY India-L1 /srv/shiny-server/India
+COPY Indonesia-L1 /srv/shiny-server/Indonesia
 COPY Malaysia-L2 /srv/shiny-server/Malaysia
-COPY Philippines-L2 /srv/shiny-server/Philippines
-COPY SouthAfrica-L2 /srv/shiny-server/SouthAfrica
-COPY Thailand-L2 /srv/shiny-server/Thailand
-COPY Turkey-L2 /srv/shiny-server/Turkey
+COPY Philippines-L1 /srv/shiny-server/Philippines
+COPY SouthAfrica-L1 /srv/shiny-server/SouthAfrica
+COPY Thailand-L1 /srv/shiny-server/Thailand
+COPY Turkey-L1 /srv/shiny-server/Turkey
 
 
 RUN sudo chown -R shiny:shiny /srv/shiny-server
