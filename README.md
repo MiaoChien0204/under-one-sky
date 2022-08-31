@@ -20,10 +20,10 @@
 docker build -t apu:latest .
 
 # switch account to your gcp google account
-gcloud config set account {GOOGLE_ACCOUNT}
+gcloud config set account {YOUR_GOOGLE_ACCOUNT}
 
 # set project 
-gcloud config set project {GCP_PROJECT_ID} && PROJECTID=$(gcloud config get-value project)
+gcloud config set project {YOUR_GCP_PROJECT_ID} && PROJECTID=$(gcloud config get-value project)
 
 # ultilize Googld Builds to build image
 docker build . -t gcr.io/$PROJECTID/apu
