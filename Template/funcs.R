@@ -1,13 +1,3 @@
-getCountryNameAbbr = function(countryName, tolower=TRUE){
-  COUNTRIES = c("Colombia" = "COL", "India" = "IND", "Indonesia" = "IDN", "Malaysia" = "MYS", "Philippines" = "PHL", "SouthAfrica" = "ZAF", "Thailand" = "THA", "Turkey" = "TUR")
-  name = COUNTRIES[countryName] %>% unname
-  if(tolower){
-    tolower(name)
-  }else{
-    name
-  } 
-}
-
 
 getStationData = function(countryName){
   readRDS(paste0("data/",countryName,"/station_data_L",BOUND_LV,".rds"))
@@ -240,7 +230,9 @@ cleanMap_selectCity = function(map){
 addMap_popName = function(map, countryName, popName){
   popRaster = getPopNameLayer(countryName, popName)
   # layerName = paste0(countryName, " Population")
-  country_pop_layer_name = LAYER_POP_NAME
+  group_name = LAYER_POP_NAME
+  group_id = paste0(LAYER_POP_NAME, "_layerId")
+  # country_pop_layer_name = LAYER_POP_NAME
   brks = getPopNameLayerBrk(countryName, popName)
   
   labels = c(
@@ -271,9 +263,11 @@ addMap_popName = function(map, countryName, popName){
   
   map %>%
     # main_map %>%
-    addRasterImage(popRaster, colors = pal, opacity = 0.4, group = country_pop_layer_name , options = tileOptions(pane = "pop")
+    addRasterImage(popRaster, colors = pal, opacity = 0.4, group = group_name , options = tileOptions(pane = "pop")
     ) %>%
-    addLegend(pal=pal, values = brks, title = layerTitle, position="bottomright", group = country_pop_layer_name, layerId = country_pop_layer_name
+    addLegend(pal=pal, values = brks, title = layerTitle, position="bottomright", 
+              group = group_name 
+              ,layerId = group_id
               ,labFormat = function(type, cuts, p) {  paste0(labels) }
     )
   
@@ -281,14 +275,22 @@ addMap_popName = function(map, countryName, popName){
 }
 
 addMap_AQ_station = function(map, countryName){
-  station = getStation(countryName)  
+  station = getStation(countryName) #%>% mutate(value = 1, label = "AQ Station")
   layerName = "AQ Station"
-  layerId = paste0(countryName, "_layer_AQStation")
+  layerId = paste0(countryName, "_layer_legend_AQstation")
   
-  map %>% 
+  map %>%
+    # main_map %>%
     addCircles(data = station,
-               group = layerName,
-               options = pathOptions(pane = "theme_AQstation")
+               color = "red",
+               group = layerName
+               ,options = pathOptions(pane = "theme_AQstation")
+    ) %>% 
+    addLegend(
+      colors = "red",
+      position = "bottomleft",
+      group = layerName, layerId = layerId,
+      labels = "AQ Station"
     )
 }
 
@@ -341,7 +343,6 @@ addMap_pm25 = function(map, countryName){
     addRasterImage(pm25, colors = pal, opacity = 0.6, group = layerName #, options = tileOptions(pane = "theme_pm25")
     ) %>% 
     addLegend(pal=pal, values = brks, 
-              
               title = "PM<sub>2.5</sub> (μg/m<sup>3</sup>)",
               position="bottomleft", layerId = layerId
               ,labFormat = function(type, cuts, p) {  paste0(labels) }
@@ -354,6 +355,7 @@ clearMap_theme = function(map, countryName){
   
   map %>% 
     removeControl(paste0(countryName, "_layer_legend_pm25")) %>% 
+    removeControl(paste0(countryName, "_layer_legend_AQstation")) %>% 
     clearGroup(theme_layer_names)
   
 }
@@ -362,12 +364,10 @@ addMap_theme = function(map, themeName, countryName){
   if(themeName=="AQ Station"){
     map %>% 
       clearMap_theme(countryName) %>% 
-      # removeControl(c("layer_AQstation", "layer_pm25")) %>% 
       addMap_AQ_station(countryName)
   }else if(themeName=="PM2.5"){
     map %>% 
       clearMap_theme(countryName) %>% 
-      # removeControl(c("layer_AQstation", "layer_pm25")) %>% 
       addMap_pm25(countryName)
   }
 }
@@ -575,49 +575,49 @@ getRankTable = function(rankPlotData, themeName){
 #### City Inspect ####
 # d = getStationData(countryName)
 
-generateUI_city_situation = function(this_data, field, popName){
-  
-  field_all = paste0(field, "_",popName,"_all")
-  
-  generatePopRow = function(this_data, popName, field_all){
-    numberFormat = function(num){
-      formatC(num, format="f", big.mark=",", digits=0)
-    }
-    
-    if(popName=="all"){
-      title = "Total Population:"
-    }
-    if(popName=="child"){
-      title = "Total Infant (0-4):"
-    }
-    if(popName=="old"){
-      title = "Total Elderlies (65+):"
-    }
-    if(popName=="pregs"){
-      title = "Total Pregnant Women:"
-    }
-    
-    
-    HTML('<tr style="height: 18px;">
-      <td style="width: 50%; height: 18px;">', title,'</td>
-      <td style="width: 50%; height: 18px;">', this_data %>% pull(field_all) %>% numberFormat,'</td>
-      </tr>')
-  }
-  
-  
-  div(class="city_situation",
-      h3(paste0(this_data[[NAME]])),
-      hr(),
-      HTML('
-      <table style="height: 72px; width: 50%; border-collapse: collapse;" border="0">
-      <tbody>
-      ',generatePopRow(this_data, popName, field_all),'
-      </tbody>
-      </table>
-      ')
-  )
-  
-}
+# generateUI_city_situation = function(this_data, field, popName){
+#   
+#   field_all = paste0(field, "_",popName,"_all")
+#   
+#   generatePopRow = function(this_data, popName, field_all){
+#     numberFormat = function(num){
+#       formatC(num, format="f", big.mark=",", digits=0)
+#     }
+#     
+#     if(popName=="all"){
+#       title = "Total Population:"
+#     }
+#     if(popName=="child"){
+#       title = "Total Infant (0-4):"
+#     }
+#     if(popName=="old"){
+#       title = "Total Elderlies (65+):"
+#     }
+#     if(popName=="pregs"){
+#       title = "Total Pregnant Women:"
+#     }
+#     
+#     
+#     HTML('<tr style="height: 18px;">
+#       <td style="width: 50%; height: 18px;">', title,'</td>
+#       <td style="width: 50%; height: 18px;">', this_data %>% pull(field_all) %>% numberFormat,'</td>
+#       </tr>')
+#   }
+#   
+#   
+#   div(class="city_situation",
+#       h3(paste0(this_data[[NAME]])),
+#       hr(),
+#       HTML('
+#       <table style="height: 72px; width: 50%; border-collapse: collapse;" border="0">
+#       <tbody>
+#       ',generatePopRow(this_data, popName, field_all),'
+#       </tbody>
+#       </table>
+#       ')
+#   )
+#   
+# }
 
 
 drawRankChart_city = function(rankPlotData, bound_id, themeName){
@@ -643,6 +643,7 @@ drawRankChart_city = function(rankPlotData, bound_id, themeName){
       yaxis=list(title="", categoryorder = "array", categoryarray = rev(dt$varName), 
                  showticklabels = FALSE
       ), 
-      xaxis = list(title = "%"))
+      xaxis = list(title = "%")) %>% 
+    config(displayModeBar = FALSE)
   
 }

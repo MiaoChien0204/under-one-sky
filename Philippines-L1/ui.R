@@ -25,7 +25,7 @@ shinyUI(
                 tags$meta(name="description", content="Different air under one sky"),
                 tags$meta(property="og:type", content="website"),
                 tags$meta(property="og:description", content="Different air under one sky"),
-                tags$meta(property="og:image", href = "preview.jpg", type="image/png"),
+                tags$meta(property="og:image", href = "logo.png", type="image/png"),
                 tags$meta(name="viewport", content="width=device-width, initial-scale=1.0"),
                 HTML("<base target='_blank'>"),
                 tags$script("
@@ -36,7 +36,7 @@ shinyUI(
             ),
             tabPanel(
                 withMathJax(),
-                title = paste0(" IN ", COUNTRY),
+                title = COUNTRY,
                 #### 
                 div(class="nav-logo",
                     img(src="logo.png", style="width: 8vw;")
@@ -51,7 +51,7 @@ shinyUI(
                                 inputId = "btn_link",
                                 label = NULL,
                                 icon = icon("book-open"),
-                                onclick = "window.open('https://www.greenpeace.org', '_blank')"
+                                onclick = "window.open('https://www.greenpeace.org/taiwan/', '_blank')"
                             )
                 ),
                
@@ -83,11 +83,11 @@ shinyUI(
                                                  column(width = 6,
                                                         pickerInput(
                                                             inputId = "pop_selector",
-                                                            label = "select group population ",
+                                                            label = "Select group population ",
                                                             choices = c("All Population"="all",
-                                                                        "Infants (0-4)" ="child",
-                                                                        "Elderlies (65+)" = "old",
-                                                                        "Pregnant Woman" = "pregs"
+                                                                        "Infants (under 5)" ="child",
+                                                                        "Older adults (over 65)" = "old",
+                                                                        "Pregnant people" = "pregs"
                                                             )
                                                         )
                                                  )
@@ -104,7 +104,7 @@ shinyUI(
                                          type = "tabs",
                                          tabPanel("Selected Area",
                                                   uiOutput("ui_city_situaion"),
-                                                  plotlyOutput("plot_city_propotion")
+                                                  plotlyOutput("plot_city_propotion", width = "100%", height = "30vh")
                                          ),
                                          tabPanel("Ranking Plot",
                                                   
@@ -132,28 +132,6 @@ shinyUI(
                                                       
                                                       
                                                   )
-                                                  
-                                                  ##### 2 column style ######
-                                                  # column(width = 3,
-                                                  # conditionalPanel(
-                                                  #     condition = "input.theme_selector=='PM2.5'",
-                                                  #     wellPanel(
-                                                  #         radioGroupButtons(
-                                                  #             inputId = "select_pm25_rank_order",
-                                                  #             label = "select rank order",
-                                                  #             choices = c("Lowest exposure"="group_a_prec",
-                                                  #                         "Highest exposure"="group_c_prec"
-                                                  #             ),
-                                                  #             checkIcon = list(
-                                                  #                 yes = icon("ok", lib = "glyphicon")),
-                                                  #             direction = "vertical"
-                                                  #         )
-                                                  #     )
-                                                  # )
-                                                  # ),
-                                                  # column(width = 9,
-                                                  #        plotlyOutput("rank_stacked_chart", width = "500px", height = "40vh")
-                                                  # )
                                                   
                                          )
                                          

@@ -14,8 +14,21 @@ body{
     margin-bottom: 0px;
 }
 
+.navbar-default {
+  background-color: #016BB4 !important;
+}
+
+.navbar-default a {
+  color: white !important;
+}
+
+.navbar-default .dropdown-menu a{
+  color: #333 !important;
+}
+
 .navbar {
   z-index: 10;
+  min-height: 70px;
 }
 
 .navbar-header p{
@@ -24,7 +37,7 @@ body{
 
 .nav-logo{
   position: absolute;
-  top: 18px;
+  top: 23px;
   right: 150px;
 /*   right: 50px; */
   z-index: 50;
@@ -32,9 +45,8 @@ body{
 
 .nav-icon {
   position: absolute;
-  top: 10px;
+  top: 15px;
   right: 50px;
-/*   right: calc(8vw + 70px ); */
   z-index: 50;
 }
 
@@ -52,16 +64,12 @@ body{
 }
 
 .left-control-panel{
-/*   border: solid 5px purple;  */
-/*   padding-left: 2%; */
-/*   padding-top: 3vh; */
   padding: 0px;
   display: inline-block;
   height: 100vh;
 }
 
 .right-control-panel{
-/*  border: solid 5px red; */
   overflow-y: scroll;
   padding: 10px 20px;
   height: 95vh;
@@ -73,16 +81,17 @@ body{
 }
 
 #main_map {
-  height: 90vh !important;
+/*   height: calc(65 px) !important; */
+  height: 93vh !important;
+  
+}
+
+.leaflet-control-attribution{
+  display: none;
 }
 
 .rank20_selector .shiny-input-container {
     display: inline-block;
-}
-
-.tab-content{
-  padding-left: 10px;
-  padding-right: 10px;
 }
 
 .leaflet-tooltip{
@@ -102,12 +111,16 @@ body{
 	display: none !important;
 }
 
+.leaflet-bottom .leaflet-control{
+  bottom: 3vh !important;
+}
+
 .shiny-output-error{
   display: none;
 }
 
 #theme_selector button.btn.radiobtn.btn-default{
-  font-size: 1rem !important;
+  font-size: 1.6rem !important;
 }
 
 #ui_desc h3{
@@ -116,4 +129,9 @@ body{
 
 #ui_desc p{
   color: #888;
+}
+
+#shiny-modal li{
+  margin-bottom: 10px;
+  color: #777
 }

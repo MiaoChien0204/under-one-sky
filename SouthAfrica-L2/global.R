@@ -70,11 +70,11 @@ COUNTRY_MAP_VAR = list(
   )
 )
 
-BASE_GROUPS = c("Positron","WorldImagery")
+BASE_GROUPS = c("WorldImagery", "Positron")
 
-LAYER_BOUNDARY_NAME = "Admin Boundary"
+LAYER_BOUNDARY_NAME = "Administrative Boundary"
 LAYER_THEME_NAME = ""
-LAYER_POP_NAME = "Selected Group Pop"
+LAYER_POP_NAME = "Selected Group Population"
 
 if(COUNTRY=="India"){
   main_map = leaflet(options = leafletOptions(minZoom = COUNTRY_MAP_VAR[[COUNTRY]]$view$zoom, maxZoom = 7))   
@@ -85,8 +85,8 @@ if(COUNTRY=="India"){
 
 main_map %<>%
   addScaleBar(position = "topleft") %>% 
-  addProviderTiles(providers$CartoDB.PositronNoLabels, group = BASE_GROUPS[1]) %>%
-  addProviderTiles(providers$Esri.WorldImagery, group = BASE_GROUPS[2]) %>%
+  addProviderTiles(providers$Esri.WorldImagery, group = BASE_GROUPS[1]) %>%
+  addProviderTiles(providers$CartoDB.PositronNoLabels, group = BASE_GROUPS[2]) %>%
   setView(lng=COUNTRY_MAP_VAR[[COUNTRY]]$view$lng, lat=COUNTRY_MAP_VAR[[COUNTRY]]$view$lat, zoom=COUNTRY_MAP_VAR[[COUNTRY]]$view$zoom) %>%
   setMaxBounds(lng1=COUNTRY_MAP_VAR[[COUNTRY]]$bound$lng1, lat1=COUNTRY_MAP_VAR[[COUNTRY]]$bound$lat1, lng2=COUNTRY_MAP_VAR[[COUNTRY]]$bound$lng2, lat2=COUNTRY_MAP_VAR[[COUNTRY]]$bound$lat2)
 
