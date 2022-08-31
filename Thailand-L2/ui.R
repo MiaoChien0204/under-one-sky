@@ -6,12 +6,11 @@ shinyUI(
         
         navbarPage(
             id = "navbar",
-            title = div(img(src="title.jpg", style="width: 20vw;")),
             
             theme = shinytheme("readable"), #Theme of the app (blue navbar)
             collapsible = FALSE, #tab panels collapse into menu in small screens
             header = tags$head(
-                # HTML("<title>Different air under one sky</title>"),
+                HTML("<title>Different air under one sky</title>"),
                 HTML("<link rel='icon', href='favicon.png', type='image/png' />"),
                 tags$link(rel = "stylesheet", type = "text/css", href = cssFile),
                 tags$meta(charset="UTF-8"),
@@ -21,19 +20,21 @@ shinyUI(
                 
                 #Including Google analytics
                 #includeScript("google-analytics.js"),
-                # tags$meta(name="title", content="Different air under one sky"),
+                tags$meta(name="title", content="Different air under one sky"),
                 tags$meta(name="description", content="Different air under one sky"),
                 tags$meta(property="og:type", content="website"),
+                tags$meta(property="og:title", content="Different air under one sky"),
                 tags$meta(property="og:description", content="Different air under one sky"),
-                tags$meta(property="og:image", href = "logo.png", type="image/png"),
+                tags$meta(property="og:image", href = "preview.jpg", type="image/png"),
                 tags$meta(name="viewport", content="width=device-width, initial-scale=1.0"),
                 HTML("<base target='_blank'>"),
                 tags$script("
                   Shiny.addCustomMessageHandler('changetitle', function(title) {
                     document.title = title
                   });
-                "),
+                ")
             ),
+            title = div(img(src="title.jpg", style="width: 20vw;")),
             tabPanel(
                 withMathJax(),
                 title = COUNTRY,
@@ -146,16 +147,17 @@ shinyUI(
             ),
             navbarMenu(
                 title = "Select country",
-                HTML(paste0('
-                 <a href="',DOMAIN, "Colombia-L1/", '" target="_self">Colombia</a>
-                 <a href="',DOMAIN, "India-L1/", '" target="_self">India</a>
-                 <a href="',DOMAIN, "Indonesia-L1/", '" target="_self">Indonesia</a>
-                 <a href="',DOMAIN, "Malaysia/", '" target="_self">Malaysia</a>
-                 <a href="',DOMAIN, "Philippines-L1/", '" target="_self">Philippines</a>
-                 <a href="',DOMAIN, "SouthAfrica-L1/", '" target="_self">South Africa</a>
-                 <a href="',DOMAIN, "Thailand-L1/", '" target="_self">Thailand</a>
-                 <a href="',DOMAIN, "Turkey-L1/", '" target="_self">Turkey</a>
-            '))
+                HTML(
+                '<a href="../Colombia/" target="_self">Colombia</a>
+                 <a href="../India/" target="_self">India</a>
+                 <a href="../Indonesia/" target="_self">Indonesia</a>
+                 <a href="../Malaysia/" target="_self">Malaysia</a>
+                 <a href="../Philippines/" target="_self">Philippines</a>
+                 <a href="../SouthAfrica/" target="_self">South Africa</a>
+                 <a href="../Thailand/" target="_self">Thailand</a>
+                 <a href="../Turkey/" target="_self">Turkey</a>
+                ')
+                
             )
             
         )

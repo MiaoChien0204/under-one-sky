@@ -6,12 +6,11 @@ shinyUI(
         
         navbarPage(
             id = "navbar",
-            title = div(img(src="title.jpg", style="width: 20vw;")),
             
             theme = shinytheme("readable"), #Theme of the app (blue navbar)
             collapsible = FALSE, #tab panels collapse into menu in small screens
             header = tags$head(
-                # HTML("<title>Different air under one sky</title>"),
+                HTML("<title>Different air under one sky</title>"),
                 HTML("<link rel='icon', href='favicon.png', type='image/png' />"),
                 tags$link(rel = "stylesheet", type = "text/css", href = cssFile),
                 tags$meta(charset="UTF-8"),
@@ -21,19 +20,21 @@ shinyUI(
                 
                 #Including Google analytics
                 #includeScript("google-analytics.js"),
-                # tags$meta(name="title", content="Different air under one sky"),
+                tags$meta(name="title", content="Different air under one sky"),
                 tags$meta(name="description", content="Different air under one sky"),
                 tags$meta(property="og:type", content="website"),
+                tags$meta(property="og:title", content="Different air under one sky"),
                 tags$meta(property="og:description", content="Different air under one sky"),
-                tags$meta(property="og:image", href = "logo.png", type="image/png"),
+                tags$meta(property="og:image", href = "preview.jpg", type="image/png"),
                 tags$meta(name="viewport", content="width=device-width, initial-scale=1.0"),
                 HTML("<base target='_blank'>"),
                 tags$script("
                   Shiny.addCustomMessageHandler('changetitle', function(title) {
                     document.title = title
                   });
-                "),
+                ")
             ),
+            title = div(img(src="title.jpg", style="width: 20vw;")),
             tabPanel(
                 withMathJax(),
                 title = COUNTRY,

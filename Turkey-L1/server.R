@@ -16,15 +16,10 @@ shinyServer(function(input, output, session) {
   themeName <- reactive(input$theme_selector)
   popName <- reactive(input$pop_selector)
   pm25_rank_order <- reactive(input$select_pm25_rank_order)
-  # tabs_viewType <- reactive(input$tabs_viewType)
   tabs_Ranking_viewType <- reactive(input$tabs_Ranking_viewType)
-  # brk_aq <- reactive(input$brk_selector_aq)
-  # brk_pm <- reactive(input$brk_selector_pm)
-  # number <- reactive(input$number_selector)
   
   observe({
     message("#------------#")
-    # message(countryName())
     message(themeName())
     message(popName())
     message("#------------#")

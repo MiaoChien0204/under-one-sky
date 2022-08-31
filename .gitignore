@@ -1,6 +1,8 @@
 .Rproj.*
 .Rproj.user
-something
+something/
+
+deploy.txt
 
 Template/
 Colombia-L2/
