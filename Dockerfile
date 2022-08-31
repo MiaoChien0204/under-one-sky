@@ -27,8 +27,6 @@ RUN R -e "devtools::install_github('rstudio/leaflet', ref='joe/feature/raster-op
 # Copy configuration files into the Docker image
 COPY shiny-server.conf  /etc/shiny-server/shiny-server.conf
 
-COPY Template /srv/shiny-server/Template
-
 COPY Colombia-L1 /srv/shiny-server/Colombia
 COPY India-L1 /srv/shiny-server/India
 COPY Indonesia-L1 /srv/shiny-server/Indonesia
