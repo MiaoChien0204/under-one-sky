@@ -52,7 +52,7 @@ shinyUI(
                                 inputId = "btn_link",
                                 label = NULL,
                                 icon = icon("book-open"),
-                                onclick = "window.open('https://www.greenpeace.org/taiwan/', '_blank')"
+                                onclick = "window.open('https://www.greenpeace.org/india/en/?p=14159&preview=true/', '_blank')"
                             )
                 ),
                
