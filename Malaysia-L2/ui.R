@@ -148,7 +148,6 @@ shinyUI(
             navbarMenu(
                 title = "Select country",
                 HTML(
-                '<a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=Colombia/" target="_self">Colombia</a>
                  <a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=India/" target="_self">India</a>
                  <a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=Indonesia/" target="_self">Indonesia</a>
                  <a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=Malaysia/" target="_self">Malaysia</a>
