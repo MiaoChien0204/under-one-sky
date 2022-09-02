@@ -148,14 +148,14 @@ shinyUI(
             navbarMenu(
                 title = "Select country",
                 HTML(
-                '<a href="../Colombia/" target="_self">Colombia</a>
-                 <a href="../India/" target="_self">India</a>
-                 <a href="../Indonesia/" target="_self">Indonesia</a>
-                 <a href="../Malaysia/" target="_self">Malaysia</a>
-                 <a href="../Philippines/" target="_self">Philippines</a>
-                 <a href="../SouthAfrica/" target="_self">South Africa</a>
-                 <a href="../Thailand/" target="_self">Thailand</a>
-                 <a href="../Turkey/" target="_self">Turkey</a>
+                '<a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=Colombia/" target="_self">Colombia</a>
+                 <a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=India/" target="_self">India</a>
+                 <a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=Indonesia/" target="_self">Indonesia</a>
+                 <a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=Malaysia/" target="_self">Malaysia</a>
+                 <a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=Philippines/" target="_self">Philippines</a>
+                 <a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=SouthAfrica/" target="_self">South Africa</a>
+                 <a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=Thailand/" target="_self">Thailand</a>
+                 <a href="https://maps.greenpeace.org/projects/apu_dashboard/?country=Turkey/" target="_self">Turkey</a>
                 ')
                 
             )
