@@ -1,4 +1,4 @@
-# APU (Air Pollution Under One Sky) Dashboard
+# DIFFERENT AIR UNDER ONE SKY 
 
 A multi-country air quality monitoring web application built with R Shiny, deployed on Google Cloud Platform.
 
