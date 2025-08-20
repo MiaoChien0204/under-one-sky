@@ -1,41 +1,75 @@
-## Introduction
-- Web applications framework: Shiny, using R lang
-- The APP builds up as a Docker image
-- Upload the docker image to Google Cloud Platform (GCP), and the docker container is running by Cloud Run.
-- Recommended Cloud Run Container: 2 CPU, 8G ram
+# APU (Air Pollution Under One Sky) Dashboard
 
+A multi-country air quality monitoring web application built with R Shiny, deployed on Google Cloud Platform.
 
+## 🌍 Live Demo
+- [Project Website](https://maps.greenpeace.org/projects/apu_dashboard/?country=India)
+- Available for: India, Indonesia, Malaysia, Philippines, South Africa, Thailand, Turkey, Colombia
 
-## Pre-installation
-- Install docker
-- Install the [gcloud CLI](!https://cloud.google.com/sdk/docs/install)
-- Create a Google Cloud project, get the `PROJECT ID`
+## ✨ Features
+- Interactive maps showing air quality data by administrative regions
+- Population exposure analysis to air pollution
+- Distance-based analysis from air quality monitoring stations
+- Responsive design with multiple visualization options
+- Country-specific data and boundaries
 
+## 🛠 Tech Stack
+- **Frontend**: R Shiny, Leaflet.js, Plotly
+- **Backend**: R with spatial data processing
+- **Deployment**: Docker + Google Cloud Run
+- **Data**: Geospatial analysis with sf, raster packages
 
+## 📊 Screenshots
+![Dashboard Overview](assets/dashboard-overview.gif)
+*Interactive air quality monitoring dashboard*
 
+## 🚀 Local Development
+```bash
+# Clone the repository
+git clone [your-repo-url]
 
-## Deployment
-``` shell
-# build image
+# Navigate to a country folder
+cd Indonesia-L1/
+
+# Run in R
+R
+> shiny::runApp()
+```
+
+## 🐳 Docker Deployment
+```bash
+# Build image
 docker build -t apu:latest .
 
-# switch account to your gcp google account
-gcloud config set account {GOOGLE_ACCOUNT}
+# Run locally
+docker run --rm -p 9999:80 --name apu apu:latest
 
-# set project 
-gcloud config set project {GCP_PROJECT_ID} && PROJECTID=$(gcloud config get-value project)
-
-# ultilize Googld Builds to build image
-docker build . -t gcr.io/$PROJECTID/apu
-
-# test locally
-# docker run --rm -p 9999:80 --name apu apu:latest
-# see http://localhost:9999/
-
-# push to gcp
-docker push gcr.io/$PROJECTID/apu
-
-# deploy on gcp cloud run
-gcloud run deploy --image gcr.io/$PROJECTID/apu --port=80 --platform managed --region asia-east1 --cpu 2 --memory 8Gi
-
+# Visit http://localhost:9999/
 ```
+
+
+## 📁 Project Structure
+```
+├── Indonesia-L1/          # Country-specific Shiny apps
+├── India-L1/
+├── [other countries]/
+├── Template/              # Base template for new countries
+├── Dockerfile            # Container configuration
+└── index.html           # Landing page
+```
+
+## 💼 About This Project
+This project demonstrates:
+- **Full-stack web development** with R Shiny
+- **Geospatial data analysis** and visualization
+- **Cloud deployment** with Docker and GCP
+- **Multi-tenant architecture** supporting multiple countries
+- **Responsive design** for environmental data presentation
+
+Developed as part of environmental monitoring initiatives, showcasing technical skills in data visualization, cloud deployment, and scalable web application architecture.
+
+## 🤝 Contributing
+This project was developed for environmental monitoring purposes. Feel free to fork and adapt for other regions.
+
+## 📄 License
+MIT License
