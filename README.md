@@ -20,13 +20,13 @@ A multi-country air quality monitoring web application built with R Shiny, deplo
 - **Data**: Geospatial analysis with sf, raster packages
 
 ## 📊 Screenshots
-![Dashboard Overview](assets/2022 OneSky.gif)
+![Dashboard Overview](assets/2022_OneSky.gif)
 *Interactive air quality monitoring dashboard*
 
 ## 🚀 Local Development
 ```bash
 # Clone the repository
-git clone [your-repo-url]
+git clone [https://github.com/MiaoChien0204/under-one-sky.git]
 
 # Navigate to a country folder
 cd Indonesia-L1/
@@ -39,10 +39,10 @@ R
 ## 🐳 Docker Deployment
 ```bash
 # Build image
-docker build -t apu:latest .
+docker build -t under-one-sky:latest .
 
 # Run locally
-docker run --rm -p 9999:80 --name apu apu:latest
+docker run --rm -p 9999:80 --name under-one-sky under-one-sky:latest
 
 # Visit http://localhost:9999/
 ```
