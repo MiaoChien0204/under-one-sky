@@ -1,5 +1,9 @@
 if(interactive()){
-  setwd("~/Dropbox/DataTalk/codeWork-datatalk/GreenPeace/APU/India-L1")
+  current_dir <- basename(getwd())
+  if (current_dir != "India-L1") {
+    setwd("./India-L1/")
+  }
+  options(shiny.launch.browser = .rs.invokeShinyWindowExternal)
 }
 
 suppressPackageStartupMessages({
