@@ -20,7 +20,7 @@ A multi-country air quality monitoring web application built with R Shiny, deplo
 - **Data**: Geospatial analysis with sf, raster packages
 
 ## 📊 Screenshots
-![Dashboard Overview](assets/dashboard-overview.gif)
+![Dashboard Overview](assets/2022 OneSky.gif)
 *Interactive air quality monitoring dashboard*
 
 ## 🚀 Local Development
